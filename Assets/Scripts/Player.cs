@@ -14,6 +14,11 @@ public class Player : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gpaText;
     [SerializeField] private TextMeshProUGUI teamRankText;
 
+    [SerializeField] private float gpaDecayMin = 0.1f;
+    [SerializeField] private float gpaDecayMax = 0.3f;
+    [SerializeField] private int teamRankDecayMin = 1;
+    [SerializeField] private int teamRankDecayMax = 4;
+
     private enum rank { Bronze, Silver, Gold, Platinum, Diamond, Master}
 
     // Start is called before the first frame update
@@ -33,5 +38,42 @@ public class Player : MonoBehaviour
         energyText.text = energy.ToString();
         gpaText.text = gpa.ToString();
         teamRankText.text = teamRank.ToString();
+    }
+
+    public void Sleep(int valueToAdd)
+    {
+        energy += valueToAdd;
+        gpa -= Random.Range(gpaDecayMin, gpaDecayMax);
+        teamRank -= Random.Range(teamRankDecayMin, teamRankDecayMax);
+        UpdateTextFields();
+    }
+
+    public void Study(float valueToAdd)
+    {
+        gpa += valueToAdd;
+        energy--;
+        UpdateTextFields();
+    }
+
+    public void Practice(int valueToAdd)
+    {
+        teamRank += valueToAdd;
+        energy--;
+        UpdateTextFields();
+    }
+
+    public int GetEnergy()
+    {
+        return energy;
+    }
+
+    public void TakeExam()
+    {
+
+    }
+
+    public void PlayTourney()
+    {
+
     }
 }

@@ -1,97 +1,88 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class GameSession : MonoBehaviour
 {
-    [SerializeField] private Player player;
-    [SerializeField] private int energyToAdd = 3;
-    [SerializeField] private float gpaToAdd = 0.1f;
-    [SerializeField] private int leagueAmountToAdd = 2;
+    [SerializeField] private Canvas startCanvas;
+    [SerializeField] private Canvas inProgressCanvas;
+    [SerializeField] private Canvas WinCanvas;
+    [SerializeField] private Canvas loseCanvas;
 
-    [SerializeField] private int numberOfDaysPerExam = 5;
-    [SerializeField] private int numberOfDaysPerLeagueEvent = 5;
-    [SerializeField] private int numberOfDaysSinceLastExam = 0;
-    [SerializeField] private int numberOfDaysSinceLastLeagueEvent = 0;
+    [SerializeField] private TextMeshProUGUI lossText;
 
-    private bool canPerformAction = true;
-    private int dayCounter = 0;
+    public enum GameStates { Starting, Started, InProgress, Progressed, Wining, Win, Losing, Loss }
+    private GameStates state;
+    public GameStates State
+    {
+        get { return state; }
+        set
+        {
+            if (state != value)
+            {
+                state = value;
+            }
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        State = GameStates.Starting;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        HandleStates();
     }
 
-    public void Sleep()
+    private void HandleStates()
     {
-        player.Sleep(energyToAdd);
-        dayCounter++;
-        numberOfDaysSinceLastExam++;
-        numberOfDaysSinceLastLeagueEvent++;
-        CheckForEvents();
-        CanPlayerPerformAction();
-                
-    }
-
-    private void CheckForEvents()
-    {
-        if (numberOfDaysSinceLastExam == numberOfDaysPerExam)
+        switch (State)
         {
-            TakeExam();
+            case GameStates.Starting:
+                startCanvas.enabled = true;
+                inProgressCanvas.enabled = false;
+                WinCanvas.enabled = false;
+                loseCanvas.enabled = false;
+                State = GameStates.Started;
+                break;
+            case GameStates.InProgress:
+                startCanvas.enabled = false;
+                inProgressCanvas.enabled = true;
+                WinCanvas.enabled = false;
+                loseCanvas.enabled = false;
+                State = GameStates.Progressed;
+                break;
+            case GameStates.Wining:
+                startCanvas.enabled = false;
+                inProgressCanvas.enabled = false;
+                WinCanvas.enabled = true;
+                loseCanvas.enabled = false;
+                State = GameStates.Win;
+                break;
+            case GameStates.Losing:
+                startCanvas.enabled = false;
+                inProgressCanvas.enabled = false;
+                WinCanvas.enabled = false;
+                loseCanvas.enabled = true;
+                State = GameStates.Loss;
+                break;
         }
-        if (numberOfDaysSinceLastLeagueEvent == numberOfDaysPerLeagueEvent)
-        {
-            PlayTourney();
-        }
     }
 
-    private void TakeExam()
+    public void LossTrigger(string reason)
     {
-        numberOfDaysSinceLastExam = 0;
-        player.TakeExam();
-    }
-
-    private void PlayTourney()
-    {
-        numberOfDaysSinceLastLeagueEvent = 0;
-        player.PlayTourney();
-    }
-
-    public void Study()
-    {
-        if (canPerformAction)
+        switch (reason)
         {
-            player.Study(gpaToAdd);
-        }
-        CanPlayerPerformAction();
-    }
-
-    public void Practice()
-    {
-        if (canPerformAction)
-        {
-            player.Practice(leagueAmountToAdd);
-        }
-        CanPlayerPerformAction();
-    }
-
-    private void CanPlayerPerformAction()
-    {
-        if (player.GetEnergy() == 0)
-        {
-            canPerformAction = false;
-        }
-        else
-        {
-            canPerformAction = true;
+            case "grades":
+                lossText.text = "You've failed the semester!";
+                break;
+            case "team":
+                lossText.text = "You've been kicked off the eSports team!";
+                break;
         }
     }
 }

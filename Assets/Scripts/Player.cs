@@ -5,75 +5,163 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int energy = 5;
-    [SerializeField] private float gpa = 3.0f;
-    [SerializeField] private int teamRank = 1000;
-    [SerializeField] private string rankCategory = rank.Bronze.ToString();
+    [SerializeField] private int energy = 50;
+    [SerializeField] private const int restEnergy = 50;
+    [SerializeField] private int socialStatus = 5;
+    [SerializeField] private const int maxSocialStatus = 10;
+    [SerializeField] private int grades = 3;
+    [SerializeField] private int leagueRank = 3;
+    [SerializeField] private int lossTriger = 2;
+    [SerializeField] private int finalPhasetrigger = 7;
+    [SerializeField] private int tourneyTimer = 30;
+    [SerializeField] private int examTimer = 20;
+    [SerializeField] private int tourneyLength = 5;
+    [SerializeField] private int examLength = 5;
+    [SerializeField] private int energyDecrement = 10;
+    [SerializeField] private int finalPhaseCountdown = 10;
 
-    [SerializeField] private TextMeshProUGUI energyText;
-    [SerializeField] private TextMeshProUGUI gpaText;
-    [SerializeField] private TextMeshProUGUI teamRankText;
+    [SerializeField] private TextMeshProUGUI energyPool;
+    [SerializeField] private TextMeshProUGUI socialStatusPool;
+    [SerializeField] private TextMeshProUGUI gradesPool;
+    [SerializeField] private TextMeshProUGUI leagueRankPool;
 
-    [SerializeField] private float gpaDecayMin = 0.1f;
-    [SerializeField] private float gpaDecayMax = 0.3f;
-    [SerializeField] private int teamRankDecayMin = 1;
-    [SerializeField] private int teamRankDecayMax = 4;
+    [SerializeField] private GameSession gameSession;
 
-    private enum rank { Bronze, Silver, Gold, Platinum, Diamond, Master}
+    private bool isGameOver = false;
+    private bool isTourneyCommencing = false;
+    private bool isExamCommencing = false;
+    private bool inLastPhase = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        UpdateTextFields();
+        StartCoroutine(DecayStats());
+        StartCoroutine(TourneyTime());
+        StartCoroutine(ExamTime());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator DecayStats()
     {
-        
+        if (!isGameOver)
+        {
+            grades--;
+            leagueRank--;
+            UpdateTextFields();
+            yield return new WaitForSeconds(1f);
+        }                
+    }    
+
+    private IEnumerator TourneyTime()
+    {
+        if (!isTourneyCommencing)
+        {
+            tourneyTimer--;
+            if (tourneyTimer == 0)
+            {
+                isTourneyCommencing = true;
+            }
+            UpdateTextFields();
+            yield return new WaitForSeconds(1f);
+            tourneyTimer = 30;
+        }
+        else
+        {
+            leagueRank--;
+            leagueRank--;
+            tourneyLength--;
+            if (tourneyLength == 0)
+            {
+                isTourneyCommencing = false;
+            }
+            UpdateTextFields();
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    private IEnumerator ExamTime()
+    {
+        if (!isExamCommencing)
+        {
+            examTimer--;
+            if (examTimer == 0)
+            {
+                isExamCommencing = true;                
+            }
+            UpdateTextFields();
+            yield return new WaitForSeconds(1f);
+            examTimer = 20;
+        }
+        else
+        {
+            grades--;
+            grades--;
+            examLength--;
+            if (examLength == 0)
+            {
+                isExamCommencing = false;
+            }
+            UpdateTextFields();
+            yield return new WaitForSeconds(1f);
+            examLength = 5;
+        }
     }
 
     private void UpdateTextFields()
     {
-        energyText.text = energy.ToString();
-        gpaText.text = gpa.ToString();
-        teamRankText.text = teamRank.ToString();
+        energyPool.text = energy.ToString();
+        socialStatusPool.text = socialStatus.ToString();
+        gradesPool.text = grades.ToString();
+        leagueRankPool.text = leagueRank.ToString();
+        if (grades <= lossTriger)
+        {
+            gameSession.State = GameSession.GameStates.Losing;
+            gameSession.LossTrigger("grades");
+        }
+        if (leagueRank <= lossTriger)
+        {
+            gameSession.State = GameSession.GameStates.Losing;
+            gameSession.LossTrigger("team");
+        }
+        if (grades >= finalPhasetrigger && leagueRank >= finalPhasetrigger)
+        {
+            finalPhaseCountdown--;
+        }
+        else
+        {
+            finalPhaseCountdown = 10;
+        }
+        if (finalPhaseCountdown == 0)
+        {
+            gameSession.State = GameSession.GameStates.Wining;
+        }
     }
 
-    public void Sleep(int valueToAdd)
+    public void Rest()
     {
-        energy += valueToAdd;
-        gpa -= Random.Range(gpaDecayMin, gpaDecayMax);
-        teamRank -= Random.Range(teamRankDecayMin, teamRankDecayMax);
+        int socialStatusBonus = (socialStatus * 10) / 2;
+        energy += restEnergy + socialStatus;
         UpdateTextFields();
     }
 
-    public void Study(float valueToAdd)
+    public void Socialize()
     {
-        gpa += valueToAdd;
-        energy--;
+        if (socialStatus < maxSocialStatus)
+        {
+            socialStatus++;
+            energy -= energyDecrement;
+        }                
+    }
+
+    public void Study()
+    {
+        grades++;
+        energy -= energyDecrement;
         UpdateTextFields();
     }
 
-    public void Practice(int valueToAdd)
+    public void Practice()
     {
-        teamRank += valueToAdd;
-        energy--;
+        leagueRank++;
+        energy -= energyDecrement;
         UpdateTextFields();
-    }
-
-    public int GetEnergy()
-    {
-        return energy;
-    }
-
-    public void TakeExam()
-    {
-
-    }
-
-    public void PlayTourney()
-    {
-
     }
 }

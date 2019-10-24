@@ -82,6 +82,7 @@ public class Player : MonoBehaviour
     private IEnumerator StartGame()
     {
         startText.text = $"Starting semester in {secondsBeforeStateChange}!";
+        messageText.text = "";
         yield return new WaitForSeconds(secondsBeforeStateChange);
         State = PlayerStates.Playing;
         gameIsInProgress = true;
@@ -90,6 +91,8 @@ public class Player : MonoBehaviour
     private IEnumerator StartStatDecay()
     {
         DecayStats();
+        ExamTime();
+        TourneyTime();
         yield return new WaitForSeconds(1f);
         StartCoroutine(StartStatDecay());
     }
@@ -103,6 +106,50 @@ public class Player : MonoBehaviour
             socialStatus--;
             UpdateTextFields();
         }        
+    }
+
+    private void ExamTime()
+    {        
+        if (examTimer <= 0)
+        {
+            if (examLength <= 0)
+            {
+                examLength = 5;
+                examTimer = 20;
+            }
+            else
+            {
+                messageText.text = "Exam Time!";
+                examLength--;
+                grades--;
+            }
+        }
+        else
+        {
+            examTimer--;
+        }
+    }
+
+    private void TourneyTime()
+    {
+        if (tourneyTimer <= 0)
+        {
+            if (tourneyLength <= 0)
+            {
+                tourneyLength = 5;
+                tourneyTimer = 30;
+            }
+            else
+            {
+                messageText.text = "Tournament Time!";
+                tourneyLength--;
+                leagueRank--;
+            }
+        }
+        else
+        {
+            tourneyTimer--;
+        }
     }
 
     private void UpdateTextFields()
@@ -120,6 +167,7 @@ public class Player : MonoBehaviour
     {        
         int socialStatusBonus = (socialStatus * 10) / 2;
         energy += restEnergy + socialStatusBonus;
+        messageText.text = "You've slept!";
         UpdateTextFields();
     }
 
@@ -129,6 +177,7 @@ public class Player : MonoBehaviour
         {
             leagueRank++;
             energy -= energyDecrement;
+            messageText.text = "You practiced with your team!";
             UpdateTextFields();
         }        
     }
@@ -139,6 +188,7 @@ public class Player : MonoBehaviour
         {
             grades++;
             energy -= energyDecrement;
+            messageText.text = "You spent some time studying!";
             UpdateTextFields();
         }        
     }
@@ -151,6 +201,7 @@ public class Player : MonoBehaviour
             {
                 socialStatus++;
                 energy -= energyDecrement;
+                messageText.text = "You hung out with friends!";
                 UpdateTextFields();
             }
         }        
@@ -173,6 +224,7 @@ public class Player : MonoBehaviour
         if (grades >= winTrigger && leagueRank >= winTrigger)
         {
             isWinning = true;
+            messageText.text = "You're nearing the top of you class and team!";
             WinChance();
         }
         else

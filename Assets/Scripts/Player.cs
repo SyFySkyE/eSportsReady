@@ -52,9 +52,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private enum WinStates { None, FinalPhaseStart, FinalPhase }
-    private WinStates currentWinState = WinStates.None;
-
     // Start is called before the first frame update
     void Start()
     {        
@@ -63,7 +60,7 @@ public class Player : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {        
         Debug.Log(currentState);
         switch (currentState)
         {

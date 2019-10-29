@@ -91,10 +91,10 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
         currentState = PlayerStates.Intro;
     }
 
-    public void StartButton()
+    public void Restart()
     {
         currentState = PlayerStates.Starting;
-
+        // TODO Reset pools to initial values. Game needs to be balanced first.
     }
 
     // Update is called once per frame
@@ -178,24 +178,18 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
 
     private IEnumerator StartStatDecay()
     {
-
-            DecayStats();
-            ExamTime();
-            TourneyTime();
-            yield return new WaitForSeconds(1f);
-            StartCoroutine(StartStatDecay());
-            
+        DecayStats();
+        ExamTime();
+        TourneyTime();
+        CheckWin();
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(StartStatDecay());            
     }
 
     private void DecayStats()
     {
         if (gameIsInProgress)
-        {
-            if (socialStatus > 0)
-            {
-                socialStatus -= socialStatusDecrement;
-
-            }
+        {                     
             grades -= gradeDecrement;
             leagueRank -= leagueDecrement;
             UpdateTextFields();
@@ -252,15 +246,16 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
         leagueRankPool.text = leagueRank.ToString();
         gradePool.text = grades.ToString("F2");
         socialStatusPool.text = socialStatus.ToString();
-        CheckWin();
     }
 
     // Button logic. TODO Soc
 
     public void Sleep()
-    {        
+    {           
         int socialStatusBonus = (socialStatus * 10) / 2;
         energy += restEnergy + socialStatusBonus;
+        socialStatus = 0;
+        if (energy >= maxEnergy) energy = maxEnergy;
         messageText.text = "You've slept!";
         UpdateTextFields();
     }
@@ -271,6 +266,7 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
         {
             leagueRank += leagueIncrement;
             energy -= energyDecrement;
+            if (leagueRank >= maxLeagueRank) leagueRank = maxLeagueRank;
             messageText.text = "You practiced with your team!";
             UpdateTextFields();
         }        
@@ -282,6 +278,7 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
         {
             grades += gradeIncrement;
             energy -= energyDecrement;
+            if (grades >= maxGrades) grades = maxGrades;
             messageText.text = "You spent some time studying!";
             UpdateTextFields();
         }        

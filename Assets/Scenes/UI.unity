@@ -2345,17 +2345,17 @@ MonoBehaviour:
   gradeIncrement: 0.25
   socialStatusIncrement: 1
   energyDecrement: 5
-  leagueDecrement: 50
-  gradeDecrement: 0.1
+  leagueDecrement: 75
+  gradeDecrement: 0.15
   socialStatusDecrement: 1
   maxEnergy: 100
-  maxLeagueRank: 5000
+  maxLeagueRank: 3000
   maxGrades: 4
   maxSocialStatus: 10
-  examTimer: 20
-  examLength: 5
-  tourneyTimer: 30
-  tourneyLength: 5
+  examTimer: 15
+  examLength: 10
+  tourneyTimer: 20
+  tourneyLength: 10
   winTimer: 10
   gradeLoseTrigger: 0
   gradeWinTrigger: 3
@@ -2944,7 +2944,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 809984412}
-        m_MethodName: StartButton
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3800,7 +3800,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1570595196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5521,7 +5521,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -341, y: 86}
+  m_AnchoredPosition: {x: -334, y: 86}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2133149657
@@ -5573,8 +5573,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 75
-  m_fontSizeBase: 75
+  m_fontSize: 70
+  m_fontSizeBase: 70
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

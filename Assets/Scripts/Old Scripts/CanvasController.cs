@@ -11,12 +11,12 @@ public class CanvasController : MonoBehaviour
     [SerializeField] GameObject loseCanvas;
     [SerializeField] TextMeshProUGUI loseCanvasSystemText;
 
-    [SerializeField] Player player;
+    private Player player;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        player = GetComponent<Player>();
     }
 
     // Update is called once per frame

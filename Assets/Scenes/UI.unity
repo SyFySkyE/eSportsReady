@@ -912,36 +912,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 257767437}
   m_CullTransparentMesh: 0
---- !u!1 &280224490
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 280224492}
-  m_Layer: 0
-  m_Name: Game Logic
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &280224492
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 280224490}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &472337706
 GameObject:
   m_ObjectHideFlags: 0
@@ -1847,6 +1817,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 809984413}
+  - component: {fileID: 809984414}
   - component: {fileID: 809984412}
   m_Layer: 0
   m_Name: Player
@@ -1864,29 +1835,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 809984411}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1de37454381c354b978f19a398f2167, type: 3}
+  m_Script: {fileID: 11500000, guid: 5322d0cdc4a83b54cb2a179010b1ab0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   energy: 50
-  leagueRank: 1750
-  grades: 2.5
+  leagueRank: 3
+  grades: 3
   socialStatus: 5
-  energyDecrement: 10
-  leagueDecrement: 250
-  gradeDecrement: 0.1
-  socialStatusDecrement: 1
-  maxEnergy: 100
-  maxLeagueRank: 5000
-  maxGrades: 4
-  maxSocialStatus: 10
-  restEnergy: 50
   examTimer: 20
   examLength: 5
   tourneyTimer: 30
   tourneyLength: 5
   winTimer: 10
-  loseTrigger: 2
+  loseTrigger: 0
   winTrigger: 7
+  startText: {fileID: 734696802}
+  messageText: {fileID: 1859185699}
+  energyPool: {fileID: 488768649}
+  leagueRankPool: {fileID: 2093433269}
+  gradePool: {fileID: 1060031645}
+  socialStatusPool: {fileID: 2041557876}
+  secondsBeforeStateChange: 3
 --- !u!4 &809984413
 Transform:
   m_ObjectHideFlags: 0
@@ -1899,8 +1868,25 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &809984414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809984411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da5a56700f6a6cf4fb6de684c43f02d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startCanvas: {fileID: 1691283657}
+  gameCanvas: {fileID: 1570595195}
+  winCanvas: {fileID: 1594135465}
+  loseCanvas: {fileID: 1533530631}
+  loseCanvasSystemText: {fileID: 1809755603}
 --- !u!1 &819598994
 GameObject:
   m_ObjectHideFlags: 0
@@ -2973,7 +2959,7 @@ RectTransform:
   m_Children:
   - {fileID: 1425021143}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2998,7 +2984,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1570595196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3184,7 +3170,7 @@ RectTransform:
   m_Children:
   - {fileID: 1963033179}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

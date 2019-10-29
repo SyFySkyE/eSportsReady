@@ -921,7 +921,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 280224492}
-  - component: {fileID: 280224491}
   m_Layer: 0
   m_Name: Game Logic
   m_TagString: Untagged
@@ -929,24 +928,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &280224491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 280224490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da5a56700f6a6cf4fb6de684c43f02d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startCanvas: {fileID: 1691283657}
-  gameCanvas: {fileID: 1570595195}
-  winCanvas: {fileID: 1594135465}
-  loseCanvas: {fileID: 1533530631}
-  loseCanvasSystemText: {fileID: 1809755603}
-  player: {fileID: 809984412}
 --- !u!4 &280224492
 Transform:
   m_ObjectHideFlags: 0
@@ -1043,7 +1024,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 809984412}
+      - m_Target: {fileID: 0}
         m_MethodName: Practice
         m_Mode: 1
         m_Arguments:
@@ -1574,7 +1555,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 809984412}
+      - m_Target: {fileID: 0}
         m_MethodName: Socialize
         m_Mode: 1
         m_Arguments:
@@ -1883,27 +1864,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 809984411}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5322d0cdc4a83b54cb2a179010b1ab0e, type: 3}
+  m_Script: {fileID: 11500000, guid: f1de37454381c354b978f19a398f2167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   energy: 50
-  leagueRank: 5
-  grades: 5
+  leagueRank: 1750
+  grades: 2.5
   socialStatus: 5
+  energyDecrement: 10
+  leagueDecrement: 250
+  gradeDecrement: 0.1
+  socialStatusDecrement: 1
+  maxEnergy: 100
+  maxLeagueRank: 5000
+  maxGrades: 4
+  maxSocialStatus: 10
+  restEnergy: 50
   examTimer: 20
   examLength: 5
   tourneyTimer: 30
   tourneyLength: 5
   winTimer: 10
-  loseTrigger: 0
+  loseTrigger: 2
   winTrigger: 7
-  startText: {fileID: 734696802}
-  messageText: {fileID: 1859185699}
-  energyPool: {fileID: 488768649}
-  leagueRankPool: {fileID: 2093433269}
-  gradePool: {fileID: 1060031645}
-  socialStatusPool: {fileID: 2041557876}
-  secondsBeforeStateChange: 3
 --- !u!4 &809984413
 Transform:
   m_ObjectHideFlags: 0
@@ -2158,7 +2141,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 809984412}
+      - m_Target: {fileID: 0}
         m_MethodName: Sleep
         m_Mode: 1
         m_Arguments:
@@ -3548,7 +3531,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 809984412}
+      - m_Target: {fileID: 0}
         m_MethodName: Study
         m_Mode: 1
         m_Arguments:

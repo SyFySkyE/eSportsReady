@@ -87,11 +87,13 @@ public class Player : MonoBehaviour
 
     private IEnumerator StartStatDecay()
     {
-        DecayStats();
-        ExamTime();
-        TourneyTime();
-        yield return new WaitForSeconds(1f);
-        StartCoroutine(StartStatDecay());
+
+            DecayStats();
+            ExamTime();
+            TourneyTime();
+            yield return new WaitForSeconds(1f);
+            StartCoroutine(StartStatDecay());
+            
     }
 
     private void DecayStats()
@@ -247,14 +249,17 @@ public class Player : MonoBehaviour
     {        
         if (grades <= loseTrigger && leagueRank <= loseTrigger)
         {
+            gameIsInProgress = false;
             GetComponent<CanvasController>().LostState("both");
         }
         else if (grades <= loseTrigger)
         {
+            gameIsInProgress = false;
             GetComponent<CanvasController>().LostState("grades");
         }
         else if (leagueRank <= loseTrigger)
         {
+            gameIsInProgress = false;
             GetComponent<CanvasController>().LostState("team");
         }
     }

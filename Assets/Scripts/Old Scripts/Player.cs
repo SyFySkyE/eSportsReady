@@ -5,18 +5,31 @@ using TMPro;
 
 public enum PlayerStates { Starting, Started, Playing, Inprogress, Winning, Won, Losing, Lost }
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking it (scripts in /New Scripts) but prototype will use old code 
 {
     [Header("Pool Amounts")]
     [SerializeField] private int energy = 50;
-    [SerializeField] private int leagueRank = 3;
-    [SerializeField] private int grades = 3;
+    [SerializeField] private int leagueRank = 1750;
+    [SerializeField] private float grades = 4.0f;
     [SerializeField] private int socialStatus = 5;
 
-    [Header("Constants")]
-    [SerializeField] private const int restEnergy = 50;
-    [SerializeField] private const int maxSocialStatus = 10;
-    [SerializeField] private const int energyDecrement = 10;
+    [Header("Increment Amounts")]
+    [SerializeField] private int restEnergy = 50;
+    [SerializeField] private int leagueIncrement = 100;
+    [SerializeField] private float gradeIncrement = 0.25f;
+    [SerializeField] private int socialStatusIncrement = 1;
+
+    [Header("Decrement Amount")]
+    [SerializeField] private int energyDecrement = 10;
+    [SerializeField] private int leagueDecrement = 50;
+    [SerializeField] private float gradeDecrement = 0.1f;
+    [SerializeField] private int socialStatusDecrement = 1;
+
+    [Header("Max Pool Amounts")]
+    [SerializeField] private int maxEnergy = 100;
+    [SerializeField] private int maxLeagueRank = 5000;
+    [SerializeField] private float maxGrades = 4.0f;
+    [SerializeField] private int maxSocialStatus = 10;
 
     [Header("Timers")]
     [SerializeField] private int examTimer = 20;
@@ -26,8 +39,10 @@ public class Player : MonoBehaviour
     [SerializeField] private int winTimer = 10;
 
     [Header("State Triggers")]
-    [SerializeField] private int loseTrigger = 2;
-    [SerializeField] private int winTrigger = 7;
+    [SerializeField] private float gradeLoseTrigger = 0f;
+    [SerializeField] private float gradeWinTrigger = 3.0f;
+    [SerializeField] private int leagueWinTrigger = 2500;
+    [SerializeField] private int leagueLoseTrigger = 0;
 
     [Header("TMP Text Objects")]
     [SerializeField] TextMeshProUGUI startText;
@@ -100,9 +115,9 @@ public class Player : MonoBehaviour
     {
         if (gameIsInProgress)
         {
-            grades--;
-            leagueRank--;
-            socialStatus--;
+            grades -= gradeDecrement;
+            leagueRank -= leagueDecrement;
+            socialStatus -= socialStatusDecrement;
             UpdateTextFields();
         }        
     }
@@ -120,7 +135,7 @@ public class Player : MonoBehaviour
             {
                 messageText.text = "Exam Time!";
                 examLength--;
-                grades--;
+                grades -= gradeDecrement;
             }
         }
         else
@@ -142,7 +157,7 @@ public class Player : MonoBehaviour
             {
                 messageText.text = "Tournament Time!";
                 tourneyLength--;
-                leagueRank--;
+                leagueRank -= leagueDecrement;
             }
         }
         else
@@ -155,7 +170,7 @@ public class Player : MonoBehaviour
     {
         energyPool.text = energy.ToString();
         leagueRankPool.text = leagueRank.ToString();
-        gradePool.text = grades.ToString();
+        gradePool.text = grades.ToString("F2");
         socialStatusPool.text = socialStatus.ToString();
         CheckWin();
     }
@@ -174,7 +189,7 @@ public class Player : MonoBehaviour
     {
         if (IsAwake())
         {
-            leagueRank++;
+            leagueRank += leagueIncrement;
             energy -= energyDecrement;
             messageText.text = "You practiced with your team!";
             UpdateTextFields();
@@ -185,7 +200,7 @@ public class Player : MonoBehaviour
     {
         if (IsAwake())
         {
-            grades++;
+            grades += gradeIncrement;
             energy -= energyDecrement;
             messageText.text = "You spent some time studying!";
             UpdateTextFields();
@@ -198,7 +213,7 @@ public class Player : MonoBehaviour
         {
             if (socialStatus < maxSocialStatus)
             {
-                socialStatus++;
+                socialStatus += socialStatusIncrement;
                 energy -= energyDecrement;
                 messageText.text = "You hung out with friends!";
                 UpdateTextFields();
@@ -210,17 +225,18 @@ public class Player : MonoBehaviour
     {
         if (energy <= 0)
         {
-            return false;
+            return false;            
         }
         else
         {
+            messageText.text = "You need to sleep!";
             return true;
         }
     }
 
     private void CheckWin()
     {        
-        if (grades >= winTrigger && leagueRank >= winTrigger)
+        if (grades >= gradeWinTrigger && leagueRank >= leagueWinTrigger)
         {
             isWinning = true;
             messageText.text = "You're nearing the top of you class and team!";
@@ -247,17 +263,17 @@ public class Player : MonoBehaviour
 
     private void LostState()
     {        
-        if (grades <= loseTrigger && leagueRank <= loseTrigger)
+        if (grades <= gradeLoseTrigger && leagueRank <= leagueLoseTrigger)
         {
             gameIsInProgress = false;
             GetComponent<CanvasController>().LostState("both");
         }
-        else if (grades <= loseTrigger)
+        else if (grades <= gradeLoseTrigger)
         {
             gameIsInProgress = false;
             GetComponent<CanvasController>().LostState("grades");
         }
-        else if (leagueRank <= loseTrigger)
+        else if (leagueRank <= leagueLoseTrigger)
         {
             gameIsInProgress = false;
             GetComponent<CanvasController>().LostState("team");

@@ -1839,16 +1839,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energy: 50
-  leagueRank: 3
+  leagueRank: 1750
   grades: 3
   socialStatus: 5
+  restEnergy: 50
+  leagueIncrement: 100
+  gradeIncrement: 0.25
+  socialStatusIncrement: 1
+  energyDecrement: 10
+  leagueDecrement: 50
+  gradeDecrement: 0.1
+  socialStatusDecrement: 1
+  maxEnergy: 100
+  maxLeagueRank: 5000
+  maxGrades: 4
+  maxSocialStatus: 10
   examTimer: 20
   examLength: 5
   tourneyTimer: 30
   tourneyLength: 5
   winTimer: 10
-  loseTrigger: 0
-  winTrigger: 7
+  gradeLoseTrigger: 0
+  gradeWinTrigger: 3
+  leagueWinTrigger: 2500
+  leagueLoseTrigger: 0
   startText: {fileID: 734696802}
   messageText: {fileID: 1859185699}
   energyPool: {fileID: 488768649}
@@ -1944,7 +1958,9 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Status:'
+  m_text: 'Social
+
+    Status:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1ebb606cc163357418641fe30fbbd3e0, type: 2}
   m_sharedMaterial: {fileID: 7013620839780106725, guid: 1ebb606cc163357418641fe30fbbd3e0,
@@ -1985,12 +2001,12 @@ MonoBehaviour:
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
+  m_paragraphSpacing: -29.36
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: -1
+  m_firstOverflowCharacterIndex: 7
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -2014,12 +2030,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 819598996}
-    characterCount: 7
+    characterCount: 14
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 1
+    spaceCount: 1
+    wordCount: 2
     linkCount: 0
-    lineCount: 1
+    lineCount: 2
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -2984,7 +3000,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1570595196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4229,7 +4245,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -355, y: -53}
+  m_AnchoredPosition: {x: -355, y: -68}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2041557875

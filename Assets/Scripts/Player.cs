@@ -244,10 +244,18 @@ public class Player : MonoBehaviour
     }
 
     private void LostState()
-    {
-        if (grades <= loseTrigger || leagueRank <= loseTrigger)
+    {        
+        if (grades <= loseTrigger && leagueRank <= loseTrigger)
         {
-            State = PlayerStates.Losing;
+            GetComponent<CanvasController>().LostState("both");
+        }
+        else if (grades <= loseTrigger)
+        {
+            GetComponent<CanvasController>().LostState("grades");
+        }
+        else if (leagueRank <= loseTrigger)
+        {
+            GetComponent<CanvasController>().LostState("team");
         }
     }
 }

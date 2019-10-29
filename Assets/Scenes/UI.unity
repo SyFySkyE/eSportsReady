@@ -945,6 +945,7 @@ MonoBehaviour:
   gameCanvas: {fileID: 1570595195}
   winCanvas: {fileID: 1594135465}
   loseCanvas: {fileID: 1533530631}
+  loseCanvasSystemText: {fileID: 1809755603}
   player: {fileID: 809984412}
 --- !u!4 &280224492
 Transform:
@@ -1893,9 +1894,9 @@ MonoBehaviour:
   examLength: 5
   tourneyTimer: 30
   tourneyLength: 5
-  finalPhraseTimer: 10
+  winTimer: 10
   loseTrigger: 0
-  finalPhaseTrigger: 7
+  winTrigger: 7
   startText: {fileID: 734696802}
   messageText: {fileID: 1859185699}
   energyPool: {fileID: 488768649}

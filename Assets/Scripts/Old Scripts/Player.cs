@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 
 public enum PlayerStates { Starting, Started, Playing, Inprogress, Winning, Won, Losing, Lost }
+public enum GradeStates { A, B, C, D, F }
+public enum LeagueStates { Bronze, Silver, Gold, Platinum, Diamond, Master}
 
 public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking it (scripts in /New Scripts) but prototype will use old code 
 {
@@ -52,6 +54,22 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
     [SerializeField] TextMeshProUGUI gradePool;
     [SerializeField] TextMeshProUGUI socialStatusPool;
 
+    [Header("Grade and League States")]
+    [SerializeField] private float aRank = 4.0f;
+    [SerializeField] private float bRank = 3.0f;
+    [SerializeField] private float cRank = 2.0f;
+    [SerializeField] private float dRank = 1.0f;
+    [SerializeField] private int masterRank = 3500;
+    [SerializeField] private int diamondRank = 3000;
+    [SerializeField] private int platinumRank = 2500;
+    [SerializeField] private int goldRank = 2000;
+    [SerializeField] private int silverRank = 1500;    
+    [SerializeField] TextMeshProUGUI leagueCategory;
+    [SerializeField] TextMeshProUGUI gradeCategory;
+
+    private GradeStates currentGrade;
+    private LeagueStates currentLeague;
+
     [SerializeField] private float secondsBeforeStateChange = 3f;
 
     private bool gameIsInProgress = false;
@@ -75,7 +93,8 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
 
     // Update is called once per frame
     void Update()
-    {        
+    {
+        DisplayPlayerCategories();
         Debug.Log(currentState);
         switch (currentState)
         {
@@ -89,6 +108,57 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
                 break;
         }        
         LostState();
+    }
+
+    private void DisplayPlayerCategories()
+    {
+        if (grades >= aRank)
+        {
+            currentGrade = GradeStates.A;
+        }
+        else if (grades >= bRank && grades < aRank)
+        {
+            currentGrade = GradeStates.B;
+        }
+        else if (grades >= cRank && grades < bRank)
+        {
+            currentGrade = GradeStates.C;
+        }
+        else if (grades >= dRank && grades < cRank)
+        {
+            currentGrade = GradeStates.D;
+        }
+        else
+        {
+            currentGrade = GradeStates.F;
+        }
+        gradeCategory.text = currentGrade.ToString();
+
+        if (leagueRank >= masterRank)
+        {
+            currentLeague = LeagueStates.Master;
+        }
+        else if (leagueRank >= diamondRank && leagueRank < masterRank)
+        {
+            currentLeague = LeagueStates.Diamond;
+        }
+        else if (leagueRank >= platinumRank && leagueRank < diamondRank)
+        {
+            currentLeague = LeagueStates.Platinum;
+        }
+        else if (leagueRank >= goldRank && leagueRank < platinumRank)
+        {
+            currentLeague = LeagueStates.Gold;
+        }
+        else if (leagueRank >= silverRank && leagueRank < goldRank)
+        {
+            currentLeague = LeagueStates.Silver;
+        }
+        else
+        {
+            currentLeague = LeagueStates.Bronze;
+        }
+        leagueCategory.text = currentLeague.ToString();
     }
 
     private IEnumerator StartGame()

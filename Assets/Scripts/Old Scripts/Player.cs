@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public enum PlayerStates { Starting, Started, Playing, Inprogress, Winning, Won, Losing, Lost }
+public enum PlayerStates { Intro, Starting, Started, Playing, Inprogress, Winning, Won, Losing, Lost }
 public enum GradeStates { A, B, C, D, F }
 public enum LeagueStates { Bronze, Silver, Gold, Platinum, Diamond, Master}
 
@@ -88,7 +88,13 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
     // Start is called before the first frame update
     void Start()
     {        
+        currentState = PlayerStates.Intro;
+    }
+
+    public void StartButton()
+    {
         currentState = PlayerStates.Starting;
+
     }
 
     // Update is called once per frame
@@ -185,9 +191,13 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
     {
         if (gameIsInProgress)
         {
+            if (socialStatus > 0)
+            {
+                socialStatus -= socialStatusDecrement;
+
+            }
             grades -= gradeDecrement;
             leagueRank -= leagueDecrement;
-            socialStatus -= socialStatusDecrement;
             UpdateTextFields();
         }        
     }

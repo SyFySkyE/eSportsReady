@@ -5,6 +5,7 @@ using TMPro;
 
 public class CanvasController : MonoBehaviour
 {
+    [SerializeField] GameObject introCanvas;
     [SerializeField] GameObject startCanvas;
     [SerializeField] GameObject gameCanvas;
     [SerializeField] GameObject winCanvas;
@@ -27,8 +28,17 @@ public class CanvasController : MonoBehaviour
 
     private void HandlePlayerState()
     {
+        if (player.State == PlayerStates.Intro)
+        {
+            introCanvas.SetActive(true);
+            startCanvas.SetActive(false);
+            gameCanvas.SetActive(false);
+            winCanvas.SetActive(false);
+            loseCanvas.SetActive(false);
+        }
         if (player.State == PlayerStates.Starting || player.State == PlayerStates.Started)
         {
+            introCanvas.SetActive(false);
             startCanvas.SetActive(true);
             gameCanvas.SetActive(false);
             winCanvas.SetActive(false);
@@ -36,6 +46,7 @@ public class CanvasController : MonoBehaviour
         }
         if (player.State == PlayerStates.Playing || player.State == PlayerStates.Inprogress)
         {
+            introCanvas.SetActive(false);
             startCanvas.SetActive(false);
             gameCanvas.SetActive(true);
             winCanvas.SetActive(false);
@@ -43,6 +54,7 @@ public class CanvasController : MonoBehaviour
         }
         else if (player.State == PlayerStates.Winning)
         {
+            introCanvas.SetActive(false);
             startCanvas.SetActive(false);
             gameCanvas.SetActive(false);
             winCanvas.SetActive(true);
@@ -50,6 +62,7 @@ public class CanvasController : MonoBehaviour
         }
         else if (player.State == PlayerStates.Losing)
         {
+            introCanvas.SetActive(false);
             startCanvas.SetActive(false);
             gameCanvas.SetActive(false);
             winCanvas.SetActive(false);

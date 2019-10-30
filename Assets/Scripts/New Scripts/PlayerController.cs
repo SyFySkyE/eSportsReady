@@ -74,15 +74,4 @@ public class PlayerController : MonoBehaviour
         this.previousState = PlayerState.Starting;
         
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    private void HandleStates()
-    {
- 
-    }
 }

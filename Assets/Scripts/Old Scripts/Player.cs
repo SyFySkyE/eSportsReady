@@ -93,8 +93,7 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
     // Start is called before the first frame update
     void Start()
     {        
-        playerAudio = GetComponent<AudioSource>();
-        PlayRandomButtonSfx();
+        playerAudio = GetComponent<AudioSource>();        
         currentState = PlayerStates.Intro;
     }
 
@@ -176,6 +175,7 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
 
     private IEnumerator StartGame()
     {
+        PlayRandomButtonSfx();
         startText.text = $"Starting semester in {secondsBeforeStateChange}!";
         messageText.text = "";
         yield return new WaitForSeconds(secondsBeforeStateChange);

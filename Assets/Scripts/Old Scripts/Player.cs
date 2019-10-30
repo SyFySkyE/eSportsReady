@@ -67,6 +67,11 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
     [SerializeField] TextMeshProUGUI leagueCategory;
     [SerializeField] TextMeshProUGUI gradeCategory;
 
+    [Header("Button Sfx")]
+    [SerializeField] AudioClip[] buttonSfx;
+    [SerializeField] private float buttonVolume = 2f;
+    private AudioSource playerAudio;
+
     private GradeStates currentGrade;
     private LeagueStates currentLeague;
 
@@ -88,6 +93,8 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
     // Start is called before the first frame update
     void Start()
     {        
+        playerAudio = GetComponent<AudioSource>();
+        PlayRandomButtonSfx();
         currentState = PlayerStates.Intro;
     }
 
@@ -179,8 +186,11 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
     private IEnumerator StartStatDecay()
     {
         DecayStats();
-        ExamTime();
-        TourneyTime();
+        if (gameIsInProgress)
+        {
+            ExamTime();
+            TourneyTime();
+        }        
         CheckWin();
         yield return new WaitForSeconds(1f);
         StartCoroutine(StartStatDecay());            
@@ -258,6 +268,7 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
         if (energy >= maxEnergy) energy = maxEnergy;
         messageText.text = "You've slept!";
         UpdateTextFields();
+        PlayRandomButtonSfx();
     }
 
     public void Practice()
@@ -269,6 +280,7 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
             if (leagueRank >= maxLeagueRank) leagueRank = maxLeagueRank;
             messageText.text = "You practiced with your team!";
             UpdateTextFields();
+            PlayRandomButtonSfx();
         }        
     }
 
@@ -281,6 +293,7 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
             if (grades >= maxGrades) grades = maxGrades;
             messageText.text = "You spent some time studying!";
             UpdateTextFields();
+            PlayRandomButtonSfx();
         }        
     }
 
@@ -294,6 +307,7 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
                 energy -= energyDecrement;
                 messageText.text = "You hung out with friends!";
                 UpdateTextFields();
+                PlayRandomButtonSfx();
             }
         }        
     }
@@ -355,5 +369,11 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
             gameIsInProgress = false;
             GetComponent<CanvasController>().LostState("team");
         }
+    }
+
+    private void PlayRandomButtonSfx()
+    {
+        int index = Random.Range(0, buttonSfx.Length);
+        playerAudio.PlayOneShot(buttonSfx[index], buttonVolume);        
     }
 }

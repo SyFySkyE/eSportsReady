@@ -100,7 +100,6 @@ public class Player : MonoBehaviour // TODO Code is baaaaad. Chris is reworking 
     public void Restart()
     {
         currentState = PlayerStates.Starting;
-        // TODO Reset pools to initial values. Game needs to be balanced first.
     }
 
     // Update is called once per frame

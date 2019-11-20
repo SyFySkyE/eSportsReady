@@ -73,6 +73,6 @@ public class HUDObserver : MonoBehaviour
 
     private void PlayerStats_onGpaProjectionChange(float obj)
     {
-        gpaProjectionText.text = obj.ToString();
+        gpaProjectionText.text = obj.ToString("F1"); // Shortens to 1 decimal place (0.1)
     }
 }

@@ -124,17 +124,20 @@ public class PlayerStats : MonoBehaviour
     {
         studyGateAmount--;
         studyGateAmount--;
+        OnStudyChange(currentStudyValue, studyGateAmount);
     }
 
     private void DayProgression_PostMidterm()
     {
         studyGateAmount--;
+        OnPracticeChange(currentPracticeValue, studyGateAmount);
     }
 
     private void DayProgression_PostTourney()
     {
         practiceGateAmount--;
         practiceGateAmount--;
+        OnPracticeChange(currentPracticeValue, practiceGateAmount);
     }
 
     private void DayProgression_FinalsTime()
@@ -153,7 +156,8 @@ public class PlayerStats : MonoBehaviour
     private void DayProgression_TourneyTime()
     {
         practiceGateAmount++;
-        practiceGateAmount++;        
+        practiceGateAmount++;
+        OnPracticeChange(currentPracticeValue, practiceGateAmount);
     }
 
     private void DayProgression_OnDayIncrement()
@@ -196,10 +200,11 @@ public class PlayerStats : MonoBehaviour
         }
         else if (currentPracticeValue < (practiceGateAmount / 2))
         {
-            currentPracticeValue -= leagueRankDecrementAmount;
+            leagueRankValue -= leagueRankDecrementAmount;
             stressValue += stressIncrement;
         }
         currentPracticeValue = 0;
+        onGpaProjectionChange(gpaProjection);
         LeagueRankManage();
         OnLeagueRankChange(currentLeagueRank.ToString());
         OnPracticeChange(currentPracticeValue, practiceGateAmount);

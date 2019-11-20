@@ -4262,25 +4262,41 @@ MonoBehaviour:
   energyValue: 0
   leagueRankValue: 0
   gpaProjection: 0
+  currentStudyValue: 0
+  studyGateAmount: 0
+  currentPracticeValue: 0
+  practiceGateAmount: 0
   leagueRankIncrementAmount: 25
   gpaProjectionIncrementAmount: 0.2
+  stressIncrement: 5
   leagueRankDecrementAmount: 25
   gpaProjectionDecrementAmount: 0.2
   chillStressDecrement: 10
-  chillEnergyDecrement: 10
+  standardEnergyDecrement: 10
   hangWithFriendsDecrement: 30
   fullSleepStressDecrement: 15
   badSleepStressDecrement: 5
   stressLevel1Sleep: 100
   stressLevel2Sleep: 70
   stressLevel3Sleep: 50
-  startingStressValue: 10
+  startingStressValue: 0
   startingEnergyValue: 100
   startingLeagueRankValue: 250
   startingGpaProjection: 2.5
+  startingStudyGateAmount: 2
+  startingPracticeGateAmount: 2
   maxLevel1Stress: 19
   maxLevel2Stress: 79
   maxLevel3Stress: 100
+  maxStudyGate: 6
+  maxPracticeGate: 6
+  maxBronze: 99
+  maxSilver: 200
+  maxGold: 300
+  maxPlat: 400
+  maxDiamond: 500
+  maxMaster: 600
+  maxGrandMaster: 700
   ui: {fileID: 1651141845}
   dayProgression: {fileID: 221407768}
 --- !u!4 &1900134275

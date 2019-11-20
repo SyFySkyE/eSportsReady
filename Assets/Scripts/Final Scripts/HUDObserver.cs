@@ -26,6 +26,18 @@ public class HUDObserver : MonoBehaviour
         playerStats.OnEnergyChange += PlayerStats_OnEnergyChange;
         playerStats.OnLeagueRankChange += PlayerStats_OnLeagueRankChange;
         playerStats.onGpaProjectionChange += PlayerStats_onGpaProjectionChange;
+        playerStats.OnStudyChange += PlayerStats_OnStudyChange;
+        playerStats.OnPracticeChange += PlayerStats_OnPracticeChange;
+    }
+
+    private void PlayerStats_OnPracticeChange(int obj, int obj2)
+    {
+        practiceGate.text = $"{obj}/{obj2}";
+    }
+
+    private void PlayerStats_OnStudyChange(int obj, int obj2)
+    {
+        studyGate.text = $"{obj}/{obj2}";
     }
 
     // Start is called before the first frame update

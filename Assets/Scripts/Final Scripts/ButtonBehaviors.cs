@@ -29,21 +29,21 @@ public class ButtonBehaviors : MonoBehaviour
 
     public void Study()
     {
-        
+        OnStudyPress();
     }
 
     public void Chill()
     {
-
+        OnChillPress();
     }
 
     public void Practice()
     {
-
+        OnPracticePress();
     }
 
     public void Hangout()
     {
-
+        OnHangOutPress();
     }
 }

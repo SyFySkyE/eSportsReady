@@ -15,15 +15,24 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int leagueRankValue;
     [SerializeField] private float gpaProjection;
 
+    [Header("Gate Values")]    
+    [SerializeField] private int currentStudyValue;
+    [SerializeField] private int studyGateAmount;
+    [SerializeField] private int currentPracticeValue;
+    [SerializeField] private int practiceGateAmount;
+
     [Header("Increment Amounts")]
     [SerializeField] private int leagueRankIncrementAmount = 25;
     [SerializeField] private float gpaProjectionIncrementAmount = 0.2f;
+    [SerializeField] private int stressIncrement = 10;
+    [SerializeField] private int midtermStressIncrement = 10;
+    [SerializeField] private int finalsStressIncrement = 15;
 
     [Header("Decrement Amounts")]
     [SerializeField] private int leagueRankDecrementAmount = 25;
     [SerializeField] private float gpaProjectionDecrementAmount = 0.2f;
     [SerializeField] private int chillStressDecrement = 10;
-    [SerializeField] private int chillEnergyDecrement = 10;
+    [SerializeField] private int standardEnergyDecrement = 10;
     [SerializeField] private int hangWithFriendsDecrement = 30;
     [SerializeField] private int fullSleepStressDecrement = 15;
     [SerializeField] private int badSleepStressDecrement = 5;
@@ -39,11 +48,18 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int startingEnergyValue = 100;
     [SerializeField] private int startingLeagueRankValue = 250;
     [SerializeField] private float startingGpaProjection = 2.5f;
+    [SerializeField] private int startingStudyGateAmount = 2;
+    [SerializeField] private int startingPracticeGateAmount = 2;
 
     [Header("Stress Thresholds")]
     [SerializeField] private int maxLevel1Stress = 19;
     [SerializeField] private int maxLevel2Stress = 79;
     [SerializeField] private int maxLevel3Stress = 100;
+
+    [Header("Max Gate Amounts")]
+    [Tooltip("Gate amounts max out at these values, except during midterms and tourneys")]
+    [SerializeField] private int maxStudyGate = 6;
+    [SerializeField] private int maxPracticeGate = 6;
 
     [Header("League Rank Thresholds")]
     [SerializeField] private int maxBronze = 99;
@@ -61,18 +77,26 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private DayProgression dayProgression;
 
     private bool canHangWithFriends;
+    private bool midTermExamTime = false;
+    private bool finalExamTime = false;
+    private bool tourneyTime = false;
+
     public event Action<string> OnStressChange;
     public event Action<int> OnEnergyChange;
     public event Action<string> OnLeagueRankChange;
     public event Action<float> onGpaProjectionChange;
+
+    public event Action<int, int> OnStudyChange; // What player value is at, what gate value is at
+    public event Action<int, int> OnPracticeChange;
 
     private StressLevels currentStressLevel;
     private LeagueRankLevels currentLeagueRank;
 
     // Start is called before the first frame update
     void Start()
-    {
+    {        
         StartObservingButtonBehavior();
+        StartObservingDayBehavior();
         InitializeStartingValues();
     }
 
@@ -85,6 +109,103 @@ public class PlayerStats : MonoBehaviour
         ui.OnHangOutPress += Ui_OnHangOutPress;
     }
 
+    private void StartObservingDayBehavior()
+    {
+        dayProgression.OnDayIncrement += DayProgression_OnDayIncrement;
+        dayProgression.TourneyTime += DayProgression_TourneyTime;
+        dayProgression.PostTourney += DayProgression_PostTourney;
+        dayProgression.MidtermTime += DayProgression_MidtermTime;
+        dayProgression.PostMidterm += DayProgression_PostMidterm;
+        dayProgression.FinalsTime += DayProgression_FinalsTime;
+        dayProgression.PostFinal += DayProgression_PostFinal;
+    }
+
+    private void DayProgression_PostFinal()
+    {
+        studyGateAmount--;
+        studyGateAmount--;
+    }
+
+    private void DayProgression_PostMidterm()
+    {
+        studyGateAmount--;
+    }
+
+    private void DayProgression_PostTourney()
+    {
+        practiceGateAmount--;
+        practiceGateAmount--;
+    }
+
+    private void DayProgression_FinalsTime()
+    {
+        stressValue += finalsStressIncrement;
+        studyGateAmount++;
+        studyGateAmount++;        
+    }
+
+    private void DayProgression_MidtermTime()
+    {
+        stressValue += midtermStressIncrement;
+        studyGateAmount++;        
+    }
+
+    private void DayProgression_TourneyTime()
+    {
+        practiceGateAmount++;
+        practiceGateAmount++;        
+    }
+
+    private void DayProgression_OnDayIncrement()
+    {
+        canHangWithFriends = true;
+        DailyGPAEvaluation();
+        DailyPracticeEvaluation();
+    }
+
+    private void DailyGPAEvaluation()
+    {
+        if (currentStudyValue >= studyGateAmount)
+        {
+            gpaProjection += gpaProjectionIncrementAmount;
+            if (studyGateAmount < maxStudyGate)
+            {
+                studyGateAmount++;
+            }
+        }
+        else if (currentStudyValue < (studyGateAmount / 2))
+        {
+            gpaProjection -= gpaProjectionDecrementAmount;
+            stressValue += stressIncrement;
+        }
+        currentStudyValue = 0;
+        onGpaProjectionChange(gpaProjection);
+        OnStudyChange(currentStudyValue, studyGateAmount);
+        StressChange();
+    }
+
+    private void DailyPracticeEvaluation()
+    {
+        if (currentPracticeValue >= practiceGateAmount)
+        {
+            leagueRankValue += leagueRankIncrementAmount;
+            if (practiceGateAmount < maxPracticeGate)
+            {
+                practiceGateAmount++;
+            }
+        }
+        else if (currentPracticeValue < (practiceGateAmount / 2))
+        {
+            currentPracticeValue -= leagueRankDecrementAmount;
+            stressValue += stressIncrement;
+        }
+        currentPracticeValue = 0;
+        LeagueRankManage();
+        OnLeagueRankChange(currentLeagueRank.ToString());
+        OnPracticeChange(currentPracticeValue, practiceGateAmount);
+        StressChange();
+    }
+
     private void OnDisable()
     {
          // Here you would unsubscribe using -= instead of +=. Observing is pretty efficient, but if you ever need to subscribe or open some kind of data stream, you should also think about closing it.
@@ -92,28 +213,105 @@ public class PlayerStats : MonoBehaviour
 
     private void Ui_OnHangOutPress()
     {
-        stressValue -= hangWithFriendsDecrement;
-        OnStressChange(currentStressLevel.ToString());
+        if (dayProgression.GetHourseLeft() <= 0)
+        {
+            stressValue += stressIncrement;
+        }
+        if (canHangWithFriends)
+        {
+            stressValue -= hangWithFriendsDecrement;
+            StressChange();            
+        }
+        canHangWithFriends = false;
     }
 
     private void Ui_OnChillPress()
     {
-        
+        if (dayProgression.GetHourseLeft() <= 0)
+        {
+            stressValue += stressIncrement;
+        }
+        dayProgression.DecrementHour();
+        stressValue -= chillStressDecrement;
+        energyValue -= standardEnergyDecrement;
+        StressChange();
+        OnEnergyChange(energyValue);
     }
 
     private void Ui_OnPracticePress()
     {
-        
+        if (dayProgression.GetHourseLeft() <= 0)
+        {
+            stressValue += stressIncrement;
+        }
+        switch (currentStressLevel)
+        {
+            case StressLevels.Chillin:
+                currentPracticeValue++;
+                currentPracticeValue++;
+                break;
+            case StressLevels.Stressed:
+                currentPracticeValue++;
+                break;
+            case StressLevels.AHHHHHH:
+                // TODO Send event action that player is stressed to HUD Observer!
+                break;
+        }
+        stressValue += stressIncrement;
+        energyValue -= standardEnergyDecrement;
+        OnEnergyChange(energyValue);
+        StressChange();
+        OnPracticeChange(currentPracticeValue, practiceGateAmount);
+        dayProgression.DecrementHour();
     }
 
     private void Ui_OnStudyPress()
     {
-        
+        if (dayProgression.GetHourseLeft() <= 0)
+        {
+            stressValue += stressIncrement;
+        }
+        switch (currentStressLevel)
+        {
+            case StressLevels.Chillin:
+                currentStudyValue++;
+                currentStudyValue++;
+                break;
+            case StressLevels.Stressed:
+                currentStudyValue++;
+                break;
+            case StressLevels.AHHHHHH:
+                // TODO Send event action that player is stressed to HUD Observer!
+                break;
+        }
+        stressValue += stressIncrement;
+        StressChange();
+        energyValue -= standardEnergyDecrement;
+        OnEnergyChange(energyValue);
+        OnStudyChange(currentStudyValue, studyGateAmount);
+        dayProgression.DecrementHour();        
     }
 
     private void Ui_OnSleepPress()
     {
-        
+        switch (currentStressLevel)
+        {
+            case StressLevels.Chillin:
+                energyValue = stressLevel1Sleep;
+                stressValue -= fullSleepStressDecrement;
+                break;
+            case StressLevels.Stressed:
+                energyValue = stressLevel2Sleep;
+                stressValue -= badSleepStressDecrement;
+                break;
+            case StressLevels.AHHHHHH:
+                energyValue = stressLevel3Sleep;
+                break;
+        }
+
+        OnEnergyChange(energyValue);
+        StressChange();        
+        dayProgression.IncrementDay();                
     }
 
     private void InitializeStartingValues()
@@ -125,11 +323,15 @@ public class PlayerStats : MonoBehaviour
         leagueRankValue = startingLeagueRankValue;
         gpaProjection = startingGpaProjection;
         currentLeagueRank = LeagueRankLevels.Gold;
+        studyGateAmount = startingStudyGateAmount;
+        practiceGateAmount = startingPracticeGateAmount;
 
         OnStressChange(currentStressLevel.ToString());
         OnEnergyChange(energyValue);
         OnLeagueRankChange(currentLeagueRank.ToString());
         onGpaProjectionChange(gpaProjection);
+        OnStudyChange(currentStudyValue, studyGateAmount);
+        OnPracticeChange(currentPracticeValue, practiceGateAmount);
     }
 
     private void StressChange()
@@ -138,14 +340,20 @@ public class PlayerStats : MonoBehaviour
         {
             currentStressLevel = StressLevels.Chillin;
         }
-        else if (stressValue > maxLevel1Stress && startingEnergyValue < maxLevel2Stress)
+        else if (stressValue >= maxLevel1Stress && stressValue < maxLevel2Stress)
         {
             currentStressLevel = StressLevels.Stressed;
+        }
+        else if (stressValue < 0)
+        {
+            currentStressLevel = StressLevels.Chillin;
+            stressValue = 0;
         }
         else
         {
             currentStressLevel = StressLevels.AHHHHHH;
         }
+        OnStressChange(currentStressLevel.ToString());
     }
 
     private void LeagueRankManage()

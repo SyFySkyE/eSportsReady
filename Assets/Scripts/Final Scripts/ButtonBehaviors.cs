@@ -14,15 +14,36 @@ public class ButtonBehaviors : MonoBehaviour
     [SerializeField] private Button practiceButton;
     [SerializeField] private Button hangOutButton;
 
-    // Start is called before the first frame update
-    void Start()
+    public event Action OnSleepPress;
+    public event Action OnStudyPress;
+    public event Action OnChillPress;
+    public event Action OnPracticePress;
+    public event Action OnHangOutPress;
+
+    // Click Events
+
+    public void Sleep()
+    {
+        OnSleepPress();
+    }
+
+    public void Study()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Chill()
     {
-        
+
+    }
+
+    public void Practice()
+    {
+
+    }
+
+    public void Hangout()
+    {
+
     }
 }

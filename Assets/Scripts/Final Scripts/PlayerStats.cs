@@ -27,6 +27,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int stressIncrement = 10;
     [SerializeField] private int midtermStressIncrement = 10;
     [SerializeField] private int finalsStressIncrement = 15;
+    [SerializeField] private int energyIncrementWhenCrunching = 30;
+    [SerializeField] private int stressIncrementWhenCrunching = 30;
 
     [Header("Decrement Amounts")]
     [SerializeField] private int leagueRankDecrementAmount = 25;
@@ -77,9 +79,9 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private DayProgression dayProgression;
 
     private bool canHangWithFriends;
-    private bool midTermExamTime = false;
-    private bool finalExamTime = false;
-    private bool tourneyTime = false;
+    private bool canChill;
+    private bool isCrunchTimeActive;
+    private bool wasCrunchTimeActiveYesterday;
 
     public event Action<string> OnStressChange;
     public event Action<int> OnEnergyChange;
@@ -88,6 +90,7 @@ public class PlayerStats : MonoBehaviour
 
     public event Action<int, int> OnStudyChange; // What player value is at, what gate value is at
     public event Action<int, int> OnPracticeChange;
+    public event Action<bool> OnCrunchChange;
 
     private StressLevels currentStressLevel;
     private LeagueRankLevels currentLeagueRank;
@@ -107,6 +110,23 @@ public class PlayerStats : MonoBehaviour
         ui.OnPracticePress += Ui_OnPracticePress;
         ui.OnChillPress += Ui_OnChillPress;
         ui.OnHangOutPress += Ui_OnHangOutPress;
+        ui.OnCrunchPress += Ui_OnCrunchPress;
+    }
+
+    private void Ui_OnCrunchPress()
+    {
+        if (!wasCrunchTimeActiveYesterday && !isCrunchTimeActive)
+        {
+            canChill = false;
+            canHangWithFriends = false;
+            isCrunchTimeActive = true;
+            OnCrunchChange(isCrunchTimeActive);
+            dayProgression.CrunchHours();
+            energyValue += energyIncrementWhenCrunching;
+            OnEnergyChange(energyValue);
+            stressValue += stressIncrementWhenCrunching;
+            StressChange();
+        }        
     }
 
     private void StartObservingDayBehavior()
@@ -130,7 +150,7 @@ public class PlayerStats : MonoBehaviour
     private void DayProgression_PostMidterm()
     {
         studyGateAmount--;
-        OnPracticeChange(currentPracticeValue, studyGateAmount);
+        OnStudyChange(currentStudyValue, studyGateAmount);
     }
 
     private void DayProgression_PostTourney()
@@ -144,13 +164,15 @@ public class PlayerStats : MonoBehaviour
     {
         stressValue += finalsStressIncrement;
         studyGateAmount++;
-        studyGateAmount++;        
+        studyGateAmount++;
+        OnStudyChange(currentStudyValue, studyGateAmount);
     }
 
     private void DayProgression_MidtermTime()
     {
         stressValue += midtermStressIncrement;
-        studyGateAmount++;        
+        studyGateAmount++;
+        OnStudyChange(currentStudyValue, studyGateAmount);
     }
 
     private void DayProgression_TourneyTime()
@@ -162,6 +184,18 @@ public class PlayerStats : MonoBehaviour
 
     private void DayProgression_OnDayIncrement()
     {
+        if (isCrunchTimeActive)
+        {
+            wasCrunchTimeActiveYesterday = true;
+            isCrunchTimeActive = false;
+            canChill = true;
+            OnCrunchChange(isCrunchTimeActive);
+            dayProgression.ResetHours();
+        }
+        else
+        {
+            wasCrunchTimeActiveYesterday = false;
+        }
         canHangWithFriends = true;
         DailyGPAEvaluation();
         DailyPracticeEvaluation();
@@ -236,11 +270,14 @@ public class PlayerStats : MonoBehaviour
         {
             stressValue += stressIncrement;
         }
-        dayProgression.DecrementHour();
-        stressValue -= chillStressDecrement;
-        energyValue -= standardEnergyDecrement;
-        StressChange();
-        OnEnergyChange(energyValue);
+        if (canChill)
+        {
+            dayProgression.DecrementHour();
+            stressValue -= chillStressDecrement;
+            energyValue -= standardEnergyDecrement;
+            StressChange();
+            OnEnergyChange(energyValue);
+        }
     }
 
     private void Ui_OnPracticePress()
@@ -322,6 +359,8 @@ public class PlayerStats : MonoBehaviour
     private void InitializeStartingValues()
     {
         canHangWithFriends = true;
+        canChill = true;
+        wasCrunchTimeActiveYesterday = false;
         currentStressLevel = StressLevels.Chillin;
         stressValue = startingStressValue;
         energyValue = startingEnergyValue;

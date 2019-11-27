@@ -13,12 +13,14 @@ public class ButtonBehaviors : MonoBehaviour
     [SerializeField] private Button chillButton;
     [SerializeField] private Button practiceButton;
     [SerializeField] private Button hangOutButton;
+    [SerializeField] private Button crunchButton;
 
     public event Action OnSleepPress;
     public event Action OnStudyPress;
     public event Action OnChillPress;
     public event Action OnPracticePress;
     public event Action OnHangOutPress;
+    public event Action OnCrunchPress;
 
     // Click Events
 
@@ -45,5 +47,10 @@ public class ButtonBehaviors : MonoBehaviour
     public void Hangout()
     {
         OnHangOutPress();
+    }
+
+    public void Crunch()
+    {
+        OnCrunchPress();
     }
 }

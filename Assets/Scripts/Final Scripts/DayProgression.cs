@@ -12,6 +12,7 @@ public class DayProgression : MonoBehaviour
     [Header("Hour by Hour")]
     [SerializeField] private int currentHoursInDay;
     [SerializeField] private int totalHoursInDay = 6;
+    [SerializeField] private int totalHoursWhenCrunching = 10;
 
     [Header("Events")]
     [SerializeField] private int dayOfMidterm = 14;
@@ -19,7 +20,7 @@ public class DayProgression : MonoBehaviour
     [SerializeField] private int tourneyTime = 7; // Every seven days
 
     public event Action OnDayIncrement;
-    public event Action OnHourDecrement;
+    public event Action OnHourChange;
     public event Action MidtermTime;
     public event Action FinalsTime;
     public event Action TourneyTime;
@@ -39,13 +40,13 @@ public class DayProgression : MonoBehaviour
         currentDayNumber = 1;
         currentHoursInDay = totalHoursInDay;
         OnDayIncrement();
-        OnHourDecrement();
+        OnHourChange();
     }
 
     public void DecrementHour()
     {        
         currentHoursInDay--;
-        OnHourDecrement();
+        OnHourChange();
     }
 
     public int GetHourseLeft()
@@ -58,12 +59,24 @@ public class DayProgression : MonoBehaviour
         return this.currentDayNumber;
     }
 
+    public void CrunchHours()
+    {
+        currentHoursInDay = totalHoursWhenCrunching;
+        OnHourChange(); 
+    }
+
+    public void ResetHours()
+    {
+        currentHoursInDay = totalHoursInDay;
+        OnHourChange();
+    }
+
     public void IncrementDay()
     {
         currentDayNumber++;
         currentHoursInDay = totalHoursInDay;
         OnDayIncrement();
-        OnHourDecrement();
+        OnHourChange();
         if (currentDayNumber == dayOfMidterm)
         {
             MidtermTime();

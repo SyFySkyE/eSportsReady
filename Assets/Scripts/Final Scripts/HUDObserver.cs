@@ -17,17 +17,31 @@ public class HUDObserver : MonoBehaviour
     [SerializeField] private TextMeshProUGUI stressStatusText;
     [SerializeField] private TextMeshProUGUI studyGate;
     [SerializeField] private TextMeshProUGUI practiceGate;
+    [SerializeField] private TextMeshProUGUI crunchValue;
 
     private void OnEnable() // Should be onEnable if the event firing is in start, otherwise the event may fire before subscribers get a chance to subscribe. Firing events w/out subscribers causes a NullReferenceException. Can be avoided using null checks.
     {
         dayProgression.OnDayIncrement += DayProgression_OnDayIncrement;
-        dayProgression.OnHourDecrement += DayProgression_OnHourDecrement;
+        dayProgression.OnHourChange += DayProgression_OnHourDecrement;
         playerStats.OnStressChange += PlayerStats_OnStressChange; // We subscribe to the event in this way. Tabbing when you += will autocomplete the line and will create the methods below.
         playerStats.OnEnergyChange += PlayerStats_OnEnergyChange;
         playerStats.OnLeagueRankChange += PlayerStats_OnLeagueRankChange;
         playerStats.onGpaProjectionChange += PlayerStats_onGpaProjectionChange;
         playerStats.OnStudyChange += PlayerStats_OnStudyChange;
         playerStats.OnPracticeChange += PlayerStats_OnPracticeChange;
+        playerStats.OnCrunchChange += PlayerStats_OnCrunchChange;
+    }
+
+    private void PlayerStats_OnCrunchChange(bool obj)
+    {
+        if (obj == true)
+        {
+            crunchValue.text = "Active";
+        }
+        else
+        {
+            crunchValue.text = "Not Active";
+        }
     }
 
     private void PlayerStats_OnPracticeChange(int obj, int obj2)
@@ -38,12 +52,6 @@ public class HUDObserver : MonoBehaviour
     private void PlayerStats_OnStudyChange(int obj, int obj2)
     {
         studyGate.text = $"{obj}/{obj2}";
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
 
     private void DayProgression_OnHourDecrement()

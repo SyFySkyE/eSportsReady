@@ -28,6 +28,7 @@ public class DayProgression : MonoBehaviour
     public event Action PostMidterm;
     public event Action PostFinal;
     public event Action PostTourney;
+    public event Action EndOfYear;
 
     // Start is called before the first frame update
     void Start()
@@ -102,6 +103,10 @@ public class DayProgression : MonoBehaviour
         {
             PostTourney();
             tourneyTime += tourneyTime;
+        }
+        if (currentDayNumber == totalDays)
+        {
+            EndOfYear();
         }
     }
 }

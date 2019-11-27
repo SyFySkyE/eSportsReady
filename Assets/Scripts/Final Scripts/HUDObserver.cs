@@ -7,6 +7,7 @@ public class HUDObserver : MonoBehaviour
 {
     [SerializeField] private PlayerStats playerStats; // The Observer will need to depend on the observable event, but the script caling the event does not need to know about who receives it and what they do with it. 
     [SerializeField] private DayProgression dayProgression;
+    [SerializeField] private ButtonBehaviors ui;
 
     [Header("TMP Text Objects")]
     [SerializeField] private TextMeshProUGUI dayNumberText;
@@ -19,11 +20,20 @@ public class HUDObserver : MonoBehaviour
     [SerializeField] private TextMeshProUGUI practiceGate;
     [SerializeField] private TextMeshProUGUI crunchValue;
     [SerializeField] private TextMeshProUGUI messageText;
+    [SerializeField] private TextMeshProUGUI lostMessageText;
+
+    [Header("Canvas objects")]
+    [SerializeField] private GameObject startCanvas;
+    [SerializeField] private GameObject gameCanvas;
+    [SerializeField] private GameObject loseCanvas;
+    [SerializeField] private GameObject winCanvas;
 
     private void OnEnable() // Should be onEnable if the event firing is in start, otherwise the event may fire before subscribers get a chance to subscribe. Firing events w/out subscribers causes a NullReferenceException. Can be avoided using null checks.
     {
+        ui.OnStartPress += Ui_OnStartPress;
         dayProgression.OnDayIncrement += DayProgression_OnDayIncrement;
         dayProgression.OnHourChange += DayProgression_OnHourDecrement;
+        dayProgression.EndOfYear += DayProgression_EndOfYear;
         playerStats.OnStressChange += PlayerStats_OnStressChange; // We subscribe to the event in this way. Tabbing when you += will autocomplete the line and will create the methods below.
         playerStats.OnEnergyChange += PlayerStats_OnEnergyChange;
         playerStats.OnLeagueRankChange += PlayerStats_OnLeagueRankChange;
@@ -32,6 +42,36 @@ public class HUDObserver : MonoBehaviour
         playerStats.OnPracticeChange += PlayerStats_OnPracticeChange;
         playerStats.OnCrunchChange += PlayerStats_OnCrunchChange;
         playerStats.OnMessagePush += PlayerStats_OnMessagePush;
+        playerStats.OnGameLost += PlayerStats_OnGameLost;
+    }
+
+    private void DayProgression_EndOfYear()
+    {
+        gameCanvas.SetActive(false);
+        loseCanvas.SetActive(false);
+        startCanvas.SetActive(false);
+        winCanvas.SetActive(true);
+    }
+
+    private void Ui_OnStartPress()
+    {
+        gameCanvas.SetActive(true);
+        loseCanvas.SetActive(false);
+        startCanvas.SetActive(false);
+    }
+
+    private void PlayerStats_OnGameLost(string obj)
+    {
+        gameCanvas.SetActive(false);
+        loseCanvas.SetActive(true);
+        if (obj == "gpa")
+        {
+            lostMessageText.text = "You've flunked out!";
+        }
+        else if (obj == "league")
+        {
+            lostMessageText.text = "You've been kicked off the team!";
+        }
     }
 
     private void PlayerStats_OnMessagePush(string obj)
@@ -42,6 +82,10 @@ public class HUDObserver : MonoBehaviour
     private void Start()
     {
         messageText.text = "";
+        gameCanvas.SetActive(false);
+        startCanvas.SetActive(true);
+        loseCanvas.SetActive(false);
+        winCanvas.SetActive(false);
     }
 
     private void PlayerStats_OnCrunchChange(bool obj)

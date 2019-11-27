@@ -72,6 +72,10 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int maxMaster = 600;
     [SerializeField] private int maxGrandMaster = 700;
 
+    [Header("Lose Conditions")]
+    [SerializeField] private float loseGpa = 1f;
+    [SerializeField] private int loseLeague = 0;
+
     [Header("Player Stats is dependent on Button Behaviors")]
     [SerializeField] private ButtonBehaviors ui;
 
@@ -92,6 +96,7 @@ public class PlayerStats : MonoBehaviour
     public event Action<int, int> OnPracticeChange;
     public event Action<bool> OnCrunchChange;
     public event Action<string> OnMessagePush;
+    public event Action<string> OnGameLost;
 
     private StressLevels currentStressLevel;
     private LeagueRankLevels currentLeagueRank;
@@ -208,6 +213,14 @@ public class PlayerStats : MonoBehaviour
 
     private void DailyGPAEvaluation()
     {
+        if (gpaProjection <= loseGpa)
+        {
+            OnGameLost("gpa");
+        }
+        else if (leagueRankValue <= loseLeague)
+        {
+            OnGameLost("league");
+        }
         if (currentStudyValue >= studyGateAmount)
         {
             gpaProjection += gpaProjectionIncrementAmount;

@@ -15,12 +15,17 @@ public class ButtonBehaviors : MonoBehaviour
     [SerializeField] private Button hangOutButton;
     [SerializeField] private Button crunchButton;
 
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button resetButton;
+ 
     public event Action OnSleepPress;
     public event Action OnStudyPress;
     public event Action OnChillPress;
     public event Action OnPracticePress;
     public event Action OnHangOutPress;
     public event Action OnCrunchPress;
+    public event Action OnStartPress;
+    public event Action OnResetPress;
 
     // Click Events
 
@@ -52,5 +57,15 @@ public class ButtonBehaviors : MonoBehaviour
     public void Crunch()
     {
         OnCrunchPress();
+    }
+
+    public void OnStart()
+    {
+        OnStartPress();
+    }
+
+    public void ResetButton()
+    {
+        OnResetPress();
     }
 }

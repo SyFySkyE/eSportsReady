@@ -91,6 +91,7 @@ public class PlayerStats : MonoBehaviour
     public event Action<int, int> OnStudyChange; // What player value is at, what gate value is at
     public event Action<int, int> OnPracticeChange;
     public event Action<bool> OnCrunchChange;
+    public event Action<string> OnMessagePush;
 
     private StressLevels currentStressLevel;
     private LeagueRankLevels currentLeagueRank;
@@ -117,6 +118,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (!wasCrunchTimeActiveYesterday && !isCrunchTimeActive)
         {
+            OnMessagePush("You are crunching. Watch your stress!");
             canChill = false;
             canHangWithFriends = false;
             isCrunchTimeActive = true;
@@ -162,6 +164,7 @@ public class PlayerStats : MonoBehaviour
 
     private void DayProgression_FinalsTime()
     {
+        OnMessagePush("Finals Time! Last chance to up your grades.");
         stressValue += finalsStressIncrement;
         studyGateAmount++;
         studyGateAmount++;
@@ -170,6 +173,7 @@ public class PlayerStats : MonoBehaviour
 
     private void DayProgression_MidtermTime()
     {
+        OnMessagePush("Time for midterms. Study up!");
         stressValue += midtermStressIncrement;
         studyGateAmount++;
         OnStudyChange(currentStudyValue, studyGateAmount);
@@ -177,6 +181,7 @@ public class PlayerStats : MonoBehaviour
 
     private void DayProgression_TourneyTime()
     {
+        OnMessagePush("Tournament Time. Your team needs you to do your best!");
         practiceGateAmount++;
         practiceGateAmount++;
         OnPracticeChange(currentPracticeValue, practiceGateAmount);
@@ -252,31 +257,48 @@ public class PlayerStats : MonoBehaviour
 
     private void Ui_OnHangOutPress()
     {
-        if (dayProgression.GetHourseLeft() <= 0)
-        {
-            stressValue += stressIncrement;
-        }
+        
         if (canHangWithFriends)
         {
+            if (dayProgression.GetHourseLeft() <= 0)
+            {
+                stressValue += stressIncrement;
+                OnMessagePush("You're VERY tired");
+            }
+            OnMessagePush("You've hung out with your friends!");
             stressValue -= hangWithFriendsDecrement;
             StressChange();            
+        }
+        else
+        {
+            OnMessagePush("You've already hung out with your friends. Try tomorrow!");
+        }
+        if (isCrunchTimeActive)
+        {
+            OnMessagePush("You're too busy crunching!");
         }
         canHangWithFriends = false;
     }
 
     private void Ui_OnChillPress()
-    {
-        if (dayProgression.GetHourseLeft() <= 0)
-        {
-            stressValue += stressIncrement;
-        }
+    {        
         if (canChill)
         {
+            OnMessagePush("You spend some time relaxing.");
+            if (dayProgression.GetHourseLeft() <= 0)
+            {
+                stressValue += stressIncrement;
+                OnMessagePush("You're VERY tired");
+            }
             dayProgression.DecrementHour();
             stressValue -= chillStressDecrement;
             energyValue -= standardEnergyDecrement;
             StressChange();
             OnEnergyChange(energyValue);
+        }
+        else
+        {
+            OnMessagePush("You're too busy crunching!");
         }
     }
 
@@ -285,6 +307,7 @@ public class PlayerStats : MonoBehaviour
         if (dayProgression.GetHourseLeft() <= 0)
         {
             stressValue += stressIncrement;
+            OnMessagePush("You're VERY tired");
         }
         switch (currentStressLevel)
         {
@@ -296,7 +319,6 @@ public class PlayerStats : MonoBehaviour
                 currentPracticeValue++;
                 break;
             case StressLevels.AHHHHHH:
-                // TODO Send event action that player is stressed to HUD Observer!
                 break;
         }
         stressValue += stressIncrement;
@@ -312,6 +334,7 @@ public class PlayerStats : MonoBehaviour
         if (dayProgression.GetHourseLeft() <= 0)
         {
             stressValue += stressIncrement;
+            OnMessagePush("You're VERY tired");
         }
         switch (currentStressLevel)
         {
@@ -323,7 +346,6 @@ public class PlayerStats : MonoBehaviour
                 currentStudyValue++;
                 break;
             case StressLevels.AHHHHHH:
-                // TODO Send event action that player is stressed to HUD Observer!
                 break;
         }
         stressValue += stressIncrement;
@@ -341,13 +363,16 @@ public class PlayerStats : MonoBehaviour
             case StressLevels.Chillin:
                 energyValue = stressLevel1Sleep;
                 stressValue -= fullSleepStressDecrement;
+                OnMessagePush("You slept great!");
                 break;
             case StressLevels.Stressed:
                 energyValue = stressLevel2Sleep;
                 stressValue -= badSleepStressDecrement;
+                OnMessagePush("You slept okay.");
                 break;
             case StressLevels.AHHHHHH:
                 energyValue = stressLevel3Sleep;
+                OnMessagePush("You slept terribly. Relax a bit!");
                 break;
         }
 
@@ -376,6 +401,7 @@ public class PlayerStats : MonoBehaviour
         onGpaProjectionChange(gpaProjection);
         OnStudyChange(currentStudyValue, studyGateAmount);
         OnPracticeChange(currentPracticeValue, practiceGateAmount);
+        OnMessagePush("A new semester awaits... Manage your time wisely!");
     }
 
     private void StressChange()
@@ -396,6 +422,7 @@ public class PlayerStats : MonoBehaviour
         else
         {
             currentStressLevel = StressLevels.AHHHHHH;
+            OnMessagePush("You're too stressed to do any work. Relax a bit!");
         }
         OnStressChange(currentStressLevel.ToString());
     }

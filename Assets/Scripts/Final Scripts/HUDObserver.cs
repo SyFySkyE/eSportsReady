@@ -18,6 +18,7 @@ public class HUDObserver : MonoBehaviour
     [SerializeField] private TextMeshProUGUI studyGate;
     [SerializeField] private TextMeshProUGUI practiceGate;
     [SerializeField] private TextMeshProUGUI crunchValue;
+    [SerializeField] private TextMeshProUGUI messageText;
 
     private void OnEnable() // Should be onEnable if the event firing is in start, otherwise the event may fire before subscribers get a chance to subscribe. Firing events w/out subscribers causes a NullReferenceException. Can be avoided using null checks.
     {
@@ -30,6 +31,17 @@ public class HUDObserver : MonoBehaviour
         playerStats.OnStudyChange += PlayerStats_OnStudyChange;
         playerStats.OnPracticeChange += PlayerStats_OnPracticeChange;
         playerStats.OnCrunchChange += PlayerStats_OnCrunchChange;
+        playerStats.OnMessagePush += PlayerStats_OnMessagePush;
+    }
+
+    private void PlayerStats_OnMessagePush(string obj)
+    {
+        messageText.text = obj;
+    }
+
+    private void Start()
+    {
+        messageText.text = "";
     }
 
     private void PlayerStats_OnCrunchChange(bool obj)

@@ -24,7 +24,7 @@ public class PlayerStats : MonoBehaviour
     [Header("Increment Amounts")]
     [SerializeField] private int leagueRankIncrementAmount = 25;
     [SerializeField] private float gpaProjectionIncrementAmount = 0.2f;
-    [SerializeField] private int stressIncrement = 10;
+    [SerializeField] private int stressIncrement = 5;
     [SerializeField] private int midtermStressIncrement = 10;
     [SerializeField] private int finalsStressIncrement = 15;
     [SerializeField] private int energyIncrementWhenCrunching = 30;
@@ -280,6 +280,9 @@ public class PlayerStats : MonoBehaviour
             }
             OnMessagePush("You've hung out with your friends!");
             stressValue -= hangWithFriendsDecrement;
+            //start of new code
+            energyValue -= standardEnergyDecrement;
+            //end of new code
             StressChange();            
         }
         else
@@ -305,7 +308,9 @@ public class PlayerStats : MonoBehaviour
             }
             dayProgression.DecrementHour();
             stressValue -= chillStressDecrement;
-            energyValue -= standardEnergyDecrement;
+            // Changed line: energyValue -= standardEnergyDecrement; to following:
+            energyValue += 20;
+            //end of changes
             StressChange();
             OnEnergyChange(energyValue);
         }
@@ -317,11 +322,15 @@ public class PlayerStats : MonoBehaviour
 
     private void Ui_OnPracticePress()
     {
+       //Added "if practiceGameAmount is less than the max, execute as normal, else if pGA is more than or equal to practice gate max, do not inrease pGA, do not increase stress, do not increment time, send message "You have studied all you can today"
+     if (currentPracticeValue < practiceGateAmount)
+     { 
         if (dayProgression.GetHourseLeft() <= 0)
         {
             stressValue += stressIncrement;
             OnMessagePush("You're VERY tired");
         }
+
         switch (currentStressLevel)
         {
             case StressLevels.Chillin:
@@ -340,33 +349,57 @@ public class PlayerStats : MonoBehaviour
         StressChange();
         OnPracticeChange(currentPracticeValue, practiceGateAmount);
         dayProgression.DecrementHour();
+             
+     }
+        //Start of new code
+        if (currentPracticeValue >= practiceGateAmount)
+        {
+            currentPracticeValue = practiceGateAmount;
+            OnPracticeChange(currentPracticeValue, practiceGateAmount);
+            OnMessagePush("You've done all the practice you can today");
+        }
+        //end of new code
     }
 
     private void Ui_OnStudyPress()
+
+        //Added if statement: if study value is less than study gate, execute as normal, if study value is equal to or greater than study gate amount, set study value to its max and do not increase stress, do not decrease the time, do not decrease energy, send message "youve done all the studying you can do today"
     {
-        if (dayProgression.GetHourseLeft() <= 0)
+        if (currentStudyValue < studyGateAmount)
         {
+            if (dayProgression.GetHourseLeft() <= 0)
+            {
+                stressValue += stressIncrement;
+                OnMessagePush("You're VERY tired");
+            }
+            switch (currentStressLevel)
+            {
+                case StressLevels.Chillin:
+                    currentStudyValue++;
+                    currentStudyValue++;
+                    break;
+                case StressLevels.Stressed:
+                    currentStudyValue++;
+                    break;
+                case StressLevels.AHHHHHH:
+                    break;
+            }
             stressValue += stressIncrement;
-            OnMessagePush("You're VERY tired");
+            StressChange();
+            energyValue -= standardEnergyDecrement;
+            OnEnergyChange(energyValue);
+            OnStudyChange(currentStudyValue, studyGateAmount);
+            dayProgression.DecrementHour();
+          
         }
-        switch (currentStressLevel)
+        //start of new code
+        if (currentStudyValue >= studyGateAmount)
         {
-            case StressLevels.Chillin:
-                currentStudyValue++;
-                currentStudyValue++;
-                break;
-            case StressLevels.Stressed:
-                currentStudyValue++;
-                break;
-            case StressLevels.AHHHHHH:
-                break;
+            currentStudyValue = studyGateAmount;
+            OnStudyChange(currentStudyValue, studyGateAmount);
+            OnMessagePush("You've done all the studying you can do for today");
         }
-        stressValue += stressIncrement;
-        StressChange();
-        energyValue -= standardEnergyDecrement;
-        OnEnergyChange(energyValue);
-        OnStudyChange(currentStudyValue, studyGateAmount);
-        dayProgression.DecrementHour();        
+        //end of new code
     }
 
     private void Ui_OnSleepPress()

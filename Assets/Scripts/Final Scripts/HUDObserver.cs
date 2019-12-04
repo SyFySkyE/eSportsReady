@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement; //added scene manager
 using TMPro;
 
 public class HUDObserver : MonoBehaviour
@@ -27,10 +28,16 @@ public class HUDObserver : MonoBehaviour
     [SerializeField] private GameObject gameCanvas;
     [SerializeField] private GameObject loseCanvas;
     [SerializeField] private GameObject winCanvas;
+    [SerializeField] private GameObject creditsCanvas; // added creditsCanvas
 
     private void OnEnable() // Should be onEnable if the event firing is in start, otherwise the event may fire before subscribers get a chance to subscribe. Firing events w/out subscribers causes a NullReferenceException. Can be avoided using null checks.
     {
         ui.OnStartPress += Ui_OnStartPress;
+        //start of new code
+        ui.OnCreditsPress += Ui_OnCreditsPress;
+        ui.OnBTStartPress += Ui_OnBTStartPress;
+        ui.OnEndGamePress += Ui_OnEndGamePress;
+        //end of new code
         dayProgression.OnDayIncrement += DayProgression_OnDayIncrement;
         dayProgression.OnHourChange += DayProgression_OnHourDecrement;
         dayProgression.EndOfYear += DayProgression_EndOfYear;
@@ -51,7 +58,34 @@ public class HUDObserver : MonoBehaviour
         loseCanvas.SetActive(false);
         startCanvas.SetActive(false);
         winCanvas.SetActive(true);
+        creditsCanvas.SetActive(false); // added credits canvas to be set to false 
     }
+
+    //Start of new Code
+    private void Ui_OnCreditsPress()
+    {
+        gameCanvas.SetActive(false);
+        loseCanvas.SetActive(false);
+        startCanvas.SetActive(false);
+        winCanvas.SetActive(false);
+        creditsCanvas.SetActive(true);
+    }
+
+    private void Ui_OnBTStartPress()
+    {
+        gameCanvas.SetActive(false);
+        loseCanvas.SetActive(false);
+        startCanvas.SetActive(true);
+        winCanvas.SetActive(false);
+        creditsCanvas.SetActive(false);
+    }
+
+    private void Ui_OnEndGamePress()
+    {
+        Application.Quit(1);
+    }
+
+    //End of new code
 
     private void Ui_OnStartPress()
     {
@@ -73,6 +107,8 @@ public class HUDObserver : MonoBehaviour
             lostMessageText.text = "You've been kicked off the team!";
         }
     }
+    
+
 
     private void PlayerStats_OnMessagePush(string obj)
     {

@@ -50,6 +50,12 @@ public class HUDObserver : MonoBehaviour
         playerStats.OnCrunchChange += PlayerStats_OnCrunchChange;
         playerStats.OnMessagePush += PlayerStats_OnMessagePush;
         playerStats.OnGameLost += PlayerStats_OnGameLost;
+        ui.OnClick += Ui_OnClick;
+    }
+
+    private void Ui_OnClick()
+    {
+        throw new System.NotImplementedException();
     }
 
     private void DayProgression_EndOfYear()
@@ -82,7 +88,7 @@ public class HUDObserver : MonoBehaviour
 
     private void Ui_OnEndGamePress()
     {
-        Application.Quit(1);
+        Application.Quit(0);
     }
 
     //End of new code

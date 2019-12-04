@@ -17,6 +17,11 @@ public class ButtonBehaviors : MonoBehaviour
 
     [SerializeField] private Button startButton;
     [SerializeField] private Button resetButton;
+    //start of new code
+    [SerializeField] private Button backtoStartButton;
+    [SerializeField] private Button creditsButton;
+    [SerializeField] private Button endButton;
+    //End of new code
  
     public event Action OnSleepPress;
     public event Action OnStudyPress;
@@ -26,7 +31,10 @@ public class ButtonBehaviors : MonoBehaviour
     public event Action OnCrunchPress;
     public event Action OnStartPress;
     public event Action OnResetPress;
-
+    //Start of new code
+    public event Action OnCreditsPress;
+    public event Action OnBTStartPress;
+    public event Action OnEndGamePress;
     // Click Events
 
     public void Sleep()
@@ -68,4 +76,21 @@ public class ButtonBehaviors : MonoBehaviour
     {
         OnResetPress();
     }
+
+    //Start of new code
+    public void CreditsButton()
+    {
+        OnCreditsPress();
+    }
+
+    public void BTStartButton()
+    {
+        OnBTStartPress();
+    }
+
+    public void EndGameButton()
+    {
+        OnEndGamePress();
+    }
+    //End of new code
 }

@@ -107,8 +107,6 @@ public class HUDObserver : MonoBehaviour
             lostMessageText.text = "You've been kicked off the team!";
         }
     }
-    
-
 
     private void PlayerStats_OnMessagePush(string obj)
     {

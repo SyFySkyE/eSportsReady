@@ -126,11 +126,11 @@ public class HUDObserver : MonoBehaviour
     {
         if (obj == true)
         {
-            crunchValue.text = "Active";
+            crunchValue.text = "Crunch";
         }
         else
         {
-            crunchValue.text = "Not Active";
+            crunchValue.text = "Normal";
         }
     }
 

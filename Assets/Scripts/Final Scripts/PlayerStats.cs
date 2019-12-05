@@ -278,7 +278,7 @@ public class PlayerStats : MonoBehaviour
                 stressValue += stressIncrement;
                 OnMessagePush("You're VERY tired");
             }
-            OnMessagePush("You've hung out with your friends!");
+            OnMessagePush("You hung out with your friends!");
             stressValue -= hangWithFriendsDecrement;
             //start of new code
             energyValue -= standardEnergyDecrement;
@@ -287,7 +287,7 @@ public class PlayerStats : MonoBehaviour
         }
         else
         {
-            OnMessagePush("You've already hung out with your friends. Try tomorrow!");
+            OnMessagePush("You already have hung out with your friends. Try tomorrow!");
         }
         if (isCrunchTimeActive)
         {
@@ -300,7 +300,7 @@ public class PlayerStats : MonoBehaviour
     {        
         if (canChill)
         {
-            OnMessagePush("You spend some time relaxing.");
+            OnMessagePush("You spent some time relaxing.");
             if (dayProgression.GetHourseLeft() <= 0)
             {
                 stressValue += stressIncrement;
@@ -328,7 +328,7 @@ public class PlayerStats : MonoBehaviour
         if (dayProgression.GetHourseLeft() <= 0)
         {
             stressValue += stressIncrement;
-            OnMessagePush("You're VERY tired");
+            OnMessagePush("You're VERY tired!");
         }
 
         switch (currentStressLevel)
@@ -409,7 +409,7 @@ public class PlayerStats : MonoBehaviour
             case StressLevels.Chillin:
                 energyValue = stressLevel1Sleep;
                 stressValue -= fullSleepStressDecrement;
-                OnMessagePush("You slept great!");
+                OnMessagePush("You slept well!");
                 break;
             case StressLevels.Stressed:
                 energyValue = stressLevel2Sleep;

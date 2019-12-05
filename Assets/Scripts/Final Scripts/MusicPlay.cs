@@ -41,8 +41,7 @@ public class MusicPlay : MonoBehaviour
                     break;
                 case "AHHHHHH":
                     audioSource.clip = superStressedMusic;
-                    break;
-                    
+                    break;                    
             }
             audioSource.Play();
         }                 

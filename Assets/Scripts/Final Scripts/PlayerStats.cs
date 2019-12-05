@@ -224,7 +224,7 @@ public class PlayerStats : MonoBehaviour
         {
             OnGameLost("gpa");
         }
-        else if (leagueRankValue <= loseLeague)
+        else if (leagueRankValue <= loseLeague) // TODO Why is this here??
         {
             OnGameLost("league");
         }
@@ -234,12 +234,14 @@ public class PlayerStats : MonoBehaviour
             if (studyGateAmount < maxStudyGate)
             {
                 studyGateAmount++;
+                OnGPALevelUp();
             }
         }
         else if (currentStudyValue < (studyGateAmount / 2))
         {
             gpaProjection -= gpaProjectionDecrementAmount;
             stressValue += stressIncrement;
+            OnGPALower();
         }
         currentStudyValue = 0;
         onGpaProjectionChange(gpaProjection);
@@ -255,11 +257,13 @@ public class PlayerStats : MonoBehaviour
             if (practiceGateAmount < maxPracticeGate)
             {
                 practiceGateAmount++;
+                OnLeagueRankUp();
             }
         }
         else if (currentPracticeValue < (practiceGateAmount / 2))
         {
             leagueRankValue -= leagueRankDecrementAmount;
+            OnLeagueLower();
             stressValue += stressIncrement;
         }
         currentPracticeValue = 0;
@@ -276,8 +280,7 @@ public class PlayerStats : MonoBehaviour
     }
 
     private void Ui_OnHangOutPress()
-    {
-        
+    {        
         if (canHangWithFriends)
         {
             if (dayProgression.GetHourseLeft() <= 0)
@@ -387,8 +390,10 @@ public class PlayerStats : MonoBehaviour
                     break;
                 case StressLevels.Stressed:
                     currentStudyValue++;
+                    OnStresedOut();
                     break;
                 case StressLevels.AHHHHHH:
+                    OnSuperStressedOut();
                     break;
             }
             stressValue += stressIncrement;

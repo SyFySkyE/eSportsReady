@@ -21,6 +21,7 @@ public class ButtonBehaviors : MonoBehaviour
     [SerializeField] private Button backtoStartButton;
     [SerializeField] private Button creditsButton;
     [SerializeField] private Button endButton;
+    [SerializeField] private Button closeTutButton;
     //End of new code
  
     public event Action OnSleepPress;
@@ -35,6 +36,7 @@ public class ButtonBehaviors : MonoBehaviour
     public event Action OnCreditsPress;
     public event Action OnBTStartPress;
     public event Action OnEndGamePress;
+    public event Action OnTutTextClose;
     // Click Events
 
     public void Sleep()
@@ -91,6 +93,11 @@ public class ButtonBehaviors : MonoBehaviour
     public void EndGameButton()
     {
         OnEndGamePress();
+    }
+
+    public void CloseTutorial()
+    {
+        OnTutTextClose();
     }
     //End of new code
 }

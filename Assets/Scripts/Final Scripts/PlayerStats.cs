@@ -98,6 +98,13 @@ public class PlayerStats : MonoBehaviour
     public event Action<string> OnMessagePush;
     public event Action<string> OnGameLost;
 
+    public event Action OnGPALevelUp;
+    public event Action OnLeagueRankUp;
+    public event Action OnGPALower;
+    public event Action OnLeagueLower;
+    public event Action OnStresedOut;
+    public event Action OnSuperStressedOut;
+
     private StressLevels currentStressLevel;
     private LeagueRankLevels currentLeagueRank;
 

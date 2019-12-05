@@ -57,7 +57,7 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
 
     private void Day_OnDayIncrement()
     {
-        tutorialSection = 10; // TODO Such as haaack. Disabling tutorial if player skips through itr.
+        //tutorialSection = 10; // TODO Such as haaack. Disabling tutorial if player skips through itr.
     }
 
     private void Buttons_OnTutTextClose() // Advisor script starts in start method at bottom. TODO This is very bad. Remind Chris to fix it.

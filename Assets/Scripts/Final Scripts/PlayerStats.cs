@@ -274,11 +274,6 @@ public class PlayerStats : MonoBehaviour
         StressChange();
     }
 
-    private void OnDisable()
-    {
-         // Here you would unsubscribe using -= instead of +=. Observing is pretty efficient, but if you ever need to subscribe or open some kind of data stream, you should also think about closing it.
-    }
-
     private void Ui_OnHangOutPress()
     {        
         if (canHangWithFriends)
@@ -476,6 +471,10 @@ public class PlayerStats : MonoBehaviour
         {
             currentStressLevel = StressLevels.Chillin;
             stressValue = 0;
+        }
+        else if (stressValue > maxLevel3Stress)
+        {
+            stressValue = maxLevel3Stress;
         }
         else
         {

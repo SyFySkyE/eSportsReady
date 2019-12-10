@@ -137,7 +137,7 @@ public class PlayerStats : MonoBehaviour
             OnCrunchChange(isCrunchTimeActive);
             dayProgression.CrunchHours();
             energyValue += energyIncrementWhenCrunching;
-            OnEnergyChange(energyValue);
+            PushEnergyChange();
             stressValue += stressIncrementWhenCrunching;
             StressChange();
         }        
@@ -317,7 +317,7 @@ public class PlayerStats : MonoBehaviour
             energyValue += 20;
             //end of changes
             StressChange();
-            OnEnergyChange(energyValue);
+            PushEnergyChange();
         }
         else
         {
@@ -329,33 +329,32 @@ public class PlayerStats : MonoBehaviour
     {
        //Added "if practiceGameAmount is less than the max, execute as normal, else if pGA is more than or equal to practice gate max, do not inrease pGA, do not increase stress, do not increment time, send message "You have studied all you can today"
      if (currentPracticeValue < practiceGateAmount)
-     { 
-        if (dayProgression.GetHourseLeft() <= 0)
         {
-            stressValue += stressIncrement;
-            OnMessagePush("You're VERY tired!");
-        }
+            if (dayProgression.GetHourseLeft() <= 0)
+            {
+                stressValue += stressIncrement;
+                OnMessagePush("You're VERY tired!");
+            }
 
-        switch (currentStressLevel)
-        {
-            case StressLevels.Chillin:
-                currentPracticeValue++;
-                currentPracticeValue++;
-                break;
-            case StressLevels.Stressed:
-                currentPracticeValue++;
-                break;
-            case StressLevels.AHHHHHH:
-                break;
+            switch (currentStressLevel)
+            {
+                case StressLevels.Chillin:
+                    currentPracticeValue++;
+                    currentPracticeValue++;
+                    break;
+                case StressLevels.Stressed:
+                    currentPracticeValue++;
+                    break;
+                case StressLevels.AHHHHHH:
+                    break;
+            }
+            stressValue += stressIncrement;
+            energyValue -= standardEnergyDecrement;            
+            StressChange();
+            OnPracticeChange(currentPracticeValue, practiceGateAmount);
+            dayProgression.DecrementHour();
+            PushEnergyChange();
         }
-        stressValue += stressIncrement;
-        energyValue -= standardEnergyDecrement;
-        OnEnergyChange(energyValue);
-        StressChange();
-        OnPracticeChange(currentPracticeValue, practiceGateAmount);
-        dayProgression.DecrementHour();
-             
-     }
         //Start of new code
         if (currentPracticeValue >= practiceGateAmount)
         {
@@ -364,6 +363,15 @@ public class PlayerStats : MonoBehaviour
             OnMessagePush("You've done all the practice you can today");
         }
         //end of new code
+    }
+
+    private void PushEnergyChange()
+    {        
+        if (energyValue <= 0)
+        {
+            Ui_OnSleepPress();
+        }
+        OnEnergyChange(energyValue);
     }
 
     private void Ui_OnStudyPress()
@@ -393,11 +401,11 @@ public class PlayerStats : MonoBehaviour
             }
             stressValue += stressIncrement;
             StressChange();
-            energyValue -= standardEnergyDecrement;
-            OnEnergyChange(energyValue);
+            energyValue -= standardEnergyDecrement;            
             OnStudyChange(currentStudyValue, studyGateAmount);
             dayProgression.DecrementHour();
-          
+            PushEnergyChange();
+
         }
         //start of new code
         if (currentStudyValue >= studyGateAmount)
@@ -428,8 +436,7 @@ public class PlayerStats : MonoBehaviour
                 OnMessagePush("You slept terribly. Relax a bit!");
                 break;
         }
-
-        OnEnergyChange(energyValue);
+        PushEnergyChange();
         StressChange();        
         dayProgression.IncrementDay();                
     }

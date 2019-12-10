@@ -73,8 +73,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int maxGrandMaster = 700;
 
     [Header("Lose Conditions")]
-    [SerializeField] private float loseGpa = 1f;
-    [SerializeField] private int loseLeague = 0;
+    [SerializeField] private float loseGpa = 2f;
+    [SerializeField] private int loseLeague = 90;
 
     [Header("Player Stats is dependent on Button Behaviors")]
     [SerializeField] private ButtonBehaviors ui;

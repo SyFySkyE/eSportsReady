@@ -23,7 +23,9 @@ public class ButtonBehaviors : MonoBehaviour
     [SerializeField] private Button endButton;
     [SerializeField] private Button closeTutButton;
     //End of new code
- 
+
+    private AudioSource audioSource;
+
     public event Action OnSleepPress;
     public event Action OnStudyPress;
     public event Action OnChillPress;
@@ -39,65 +41,82 @@ public class ButtonBehaviors : MonoBehaviour
     public event Action OnTutTextClose;
     // Click Events
 
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     public void Sleep()
     {
         OnSleepPress();
+        audioSource.Play();
     }
 
     public void Study()
     {
         OnStudyPress();
+        audioSource.Play();
     }
 
     public void Chill()
     {
         OnChillPress();
+        audioSource.Play();
     }
 
     public void Practice()
     {
         OnPracticePress();
+        audioSource.Play();
     }
 
     public void Hangout()
     {
         OnHangOutPress();
+        audioSource.Play();
     }
 
     public void Crunch()
     {
         OnCrunchPress();
+        audioSource.Play();
     }
 
     public void OnStart()
     {
         OnStartPress();
+        audioSource.Play();
     }
 
     public void ResetButton()
     {
         OnResetPress();
+        audioSource.Play();
     }
 
     //Start of new code
     public void CreditsButton()
     {
         OnCreditsPress();
+        audioSource.Play();
     }
 
     public void BTStartButton()
     {
         OnBTStartPress();
+        audioSource.Play();
     }
 
     public void EndGameButton()
     {
         OnEndGamePress();
+        audioSource.Play();
     }
 
     public void CloseTutorial()
     {
         OnTutTextClose();
+        audioSource.Play();
     }
     //End of new code
 }

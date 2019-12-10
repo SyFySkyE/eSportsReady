@@ -43,11 +43,19 @@ public class CreditsScroll : MonoBehaviour
     void Update()
     {
         //CreditsBlock.transform.Translate(0, 1, 0);
+        if (Input.GetMouseButtonDown(0))
+        {
+            StopAllCoroutines();
+            BTStartButton.transform.position = new Vector2(960, 500);
+            EndButton.transform.position = new Vector2(960, 600);
+            InfoBlockOne.SetActive(false);
+            CreditsBlock.SetActive(false);
+            
+        }
     }
 
     IEnumerator ScrollUp()
     {
-
         int time = 0;
         int time2 = 0;
         yield return new WaitForSeconds(2f);
@@ -69,6 +77,5 @@ public class CreditsScroll : MonoBehaviour
             yield return new WaitForSeconds(scrollTime);
             time2++;
         }
-
     }
 }

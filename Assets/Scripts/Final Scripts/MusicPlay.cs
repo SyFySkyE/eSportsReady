@@ -34,12 +34,15 @@ public class MusicPlay : MonoBehaviour
             switch (obj)
             {
                 case "Chillin":
+                    this.currentLevel = StressLevels.Chillin;
                     audioSource.clip = chillMusic;
                     break;
                 case "Stressed":
+                    this.currentLevel = StressLevels.Stressed;
                     audioSource.clip = stressedMusic;
                     break;
                 case "AHHHHHH":
+                    this.currentLevel = StressLevels.AHHHHHH;
                     audioSource.clip = superStressedMusic;
                     break;                    
             }

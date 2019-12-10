@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement; //added scene manager
+using UnityEngine.UI;
 using TMPro;
 
 public class HUDObserver : MonoBehaviour
@@ -31,13 +32,32 @@ public class HUDObserver : MonoBehaviour
     [SerializeField] private GameObject winCanvas;
     [SerializeField] private GameObject creditsCanvas; // added creditsCanvas
 
+    [Header("Diff Image Objects accompanied by each stat")]
+    [Tooltip("Logic for this is within HUDObserver")]
+    [SerializeField] private Image gpaProjectionDiff;
+    [SerializeField] private Image leagueRankDiff;
+    [SerializeField] private Image remainingHoursDiff;
+    [SerializeField] private Image energyDiff;
+    [SerializeField] private Image stressDiff;
+    [SerializeField] private Image studyDiff;
+    [SerializeField] private Image practiceDiff;
+    [SerializeField] private Image hangoutDiff;
+
+    [Header("Diff Symbols")]
+    [SerializeField] private Sprite increaseSymbol;
+    [SerializeField] private Sprite decreaseSymbol;
+    [SerializeField] private Sprite emptySymbol;
+    [SerializeField] private float secBeforeSymbolReset = 3f;
+
     private void OnEnable() // Should be onEnable if the event firing is in start, otherwise the event may fire before subscribers get a chance to subscribe. Firing events w/out subscribers causes a NullReferenceException. Can be avoided using null checks.
-    {
+    {        
         ui.OnStartPress += Ui_OnStartPress;
         //start of new code
         ui.OnCreditsPress += Ui_OnCreditsPress;
         ui.OnBTStartPress += Ui_OnBTStartPress;
         ui.OnEndGamePress += Ui_OnEndGamePress;
+        ui.OnSleepPress += Ui_OnSleepPress;
+        ui.OnChillPress += Ui_OnChillPress;
         //end of new code
         dayProgression.OnDayIncrement += DayProgression_OnDayIncrement;
         dayProgression.OnHourChange += DayProgression_OnHourDecrement;
@@ -52,11 +72,91 @@ public class HUDObserver : MonoBehaviour
         playerStats.OnMessagePush += PlayerStats_OnMessagePush;
         playerStats.OnGameLost += PlayerStats_OnGameLost;
         playerStats.OnHangoutChange += PlayerStats_OnHangoutChange;
+        playerStats.OnGPALower += PlayerStats_OnGPALower;
+        playerStats.OnGPALevelUp += PlayerStats_OnGPALevelUp;
+        playerStats.OnLeagueLower += PlayerStats_OnLeagueLower;
+        playerStats.OnLeagueRankUp += PlayerStats_OnLeagueRankUp;
+        dayProgression.MidtermTime += DayProgression_MidtermTime;
+        dayProgression.FinalsTime += DayProgression_FinalsTime;
+        dayProgression.TourneyTime += DayProgression_TourneyTime;
+    }
+
+    private void PlayerStats_OnLeagueRankUp()
+    {
+        leagueRankDiff.sprite = increaseSymbol;
+        StartCoroutine(FadeDiffImage(leagueRankDiff));
+    }
+
+    private void PlayerStats_OnLeagueLower()
+    {
+        leagueRankDiff.sprite = decreaseSymbol;
+        StartCoroutine(FadeDiffImage(leagueRankDiff));
+    }
+
+    private void PlayerStats_OnGPALevelUp()
+    {
+        gpaProjectionDiff.sprite = increaseSymbol;
+        StartCoroutine(FadeDiffImage(gpaProjectionDiff));
+    }
+
+    private void PlayerStats_OnGPALower()
+    {
+        gpaProjectionDiff.sprite = decreaseSymbol;
+        StartCoroutine(FadeDiffImage(gpaProjectionDiff));
+    }
+
+    private void Ui_OnChillPress()
+    {
+        energyDiff.sprite = increaseSymbol;
+        StartCoroutine(FadeDiffImage(energyDiff));
+        stressDiff.sprite = decreaseSymbol;
+        StartCoroutine(FadeDiffImage(stressDiff));
+    }
+
+    private void Ui_OnSleepPress()
+    {
+        stressDiff.sprite = decreaseSymbol;
+        StartCoroutine(FadeDiffImage(stressDiff));
+    }
+
+    private void DayProgression_TourneyTime()
+    {
+        stressDiff.sprite = increaseSymbol;
+        StartCoroutine(FadeDiffImage(stressDiff));
+    }
+
+    private void DayProgression_FinalsTime()
+    {
+        stressDiff.sprite = increaseSymbol;
+        StartCoroutine(FadeDiffImage(stressDiff));
+    }
+
+    private void DayProgression_MidtermTime()
+    {
+        stressDiff.sprite = increaseSymbol;
+        StartCoroutine(FadeDiffImage(stressDiff));
     }
 
     private void PlayerStats_OnHangoutChange(int arg1, int arg2)
     {
         hangoutGate.text = $"{arg1}/{arg2}";
+        if (arg1 < arg2)
+        {
+            hangoutDiff.sprite = decreaseSymbol;
+            stressDiff.sprite = decreaseSymbol;
+            StartCoroutine(FadeDiffImage(stressDiff));
+        }
+        else
+        {
+            hangoutDiff.sprite = increaseSymbol;
+        }
+        StartCoroutine(FadeDiffImage(hangoutDiff));
+    }
+
+    private IEnumerator FadeDiffImage(Image image)
+    {
+        yield return new WaitForSeconds(secBeforeSymbolReset);
+        image.sprite = emptySymbol;
     }
 
     private void DayProgression_EndOfYear()
@@ -89,7 +189,7 @@ public class HUDObserver : MonoBehaviour
 
     private void Ui_OnEndGamePress()
     {
-        Application.Quit(1);
+        Application.Quit(0);
     }
 
     //End of new code
@@ -127,6 +227,7 @@ public class HUDObserver : MonoBehaviour
         startCanvas.SetActive(true);
         loseCanvas.SetActive(false);
         winCanvas.SetActive(false);
+        ResetDiffImages();
     }
 
     private void PlayerStats_OnCrunchChange(bool obj)
@@ -134,6 +235,10 @@ public class HUDObserver : MonoBehaviour
         if (obj == true)
         {
             crunchValue.text = "Crunch";
+            stressDiff.sprite = increaseSymbol;
+            StartCoroutine(FadeDiffImage(stressDiff));
+            energyDiff.sprite = increaseSymbol;
+            StartCoroutine(FadeDiffImage(energyDiff));
         }
         else
         {
@@ -142,23 +247,64 @@ public class HUDObserver : MonoBehaviour
     }
 
     private void PlayerStats_OnPracticeChange(int obj, int obj2)
-    {
+    {        
+        if (obj != 0)
+        {
+            practiceDiff.sprite = increaseSymbol;
+            stressDiff.sprite = increaseSymbol;
+            StartCoroutine(FadeDiffImage(stressDiff));
+            energyDiff.sprite = decreaseSymbol;
+            StartCoroutine(FadeDiffImage(energyDiff));
+        }
+        else if (obj > obj2)
+        {
+            obj = obj2;
+            practiceDiff.sprite = emptySymbol;
+        }
         practiceGate.text = $"{obj}/{obj2}";
+        StartCoroutine(FadeDiffImage(practiceDiff));
     }
 
     private void PlayerStats_OnStudyChange(int obj, int obj2)
-    {
+    {        
+        if (obj != 0)
+        {
+            studyDiff.sprite = increaseSymbol;
+            stressDiff.sprite = increaseSymbol;
+            StartCoroutine(FadeDiffImage(stressDiff));
+            energyDiff.sprite = decreaseSymbol;
+            StartCoroutine(FadeDiffImage(energyDiff));
+        }
+        else if (obj > obj2)
+        {
+            obj = obj2;            
+        }
         studyGate.text = $"{obj}/{obj2}";
+        StartCoroutine(FadeDiffImage(studyDiff));
     }
 
-    private void DayProgression_OnHourDecrement()
+    private void DayProgression_OnHourDecrement() // Should be OnHourChange, not decrement
     {
         hoursLeftInDayText.text = $"{dayProgression.GetHourseLeft()}";
+        if (dayProgression.GetHourseLeft() == 6)
+        {
+            remainingHoursDiff.sprite = increaseSymbol;
+        }
+        else
+        {
+            remainingHoursDiff.sprite = decreaseSymbol;
+        }
+        
+        StartCoroutine(FadeDiffImage(remainingHoursDiff));
     }
 
     private void DayProgression_OnDayIncrement()
     {
-        dayNumberText.text = $"Day {dayProgression.GetDayNumber()} of 30";
+        dayNumberText.text = $"Day {dayProgression.GetDayNumber()} of 15";
+        remainingHoursDiff.sprite = increaseSymbol;
+        energyDiff.sprite = increaseSymbol;
+        StartCoroutine(FadeDiffImage(remainingHoursDiff));
+        StartCoroutine(FadeDiffImage(energyDiff));
     }
 
     private void PlayerStats_OnStressChange(string obj)
@@ -179,5 +325,18 @@ public class HUDObserver : MonoBehaviour
     private void PlayerStats_onGpaProjectionChange(float obj)
     {
         gpaProjectionText.text = obj.ToString("F1"); // Shortens to 1 decimal place (0.1)
+    }
+
+    private void ResetDiffImages()
+    {
+        gpaProjectionDiff.sprite = emptySymbol;
+        leagueRankDiff.sprite = emptySymbol;
+        remainingHoursDiff.sprite = emptySymbol;
+        stressDiff.sprite = emptySymbol;
+        energyDiff.sprite = emptySymbol;
+        stressDiff.sprite = emptySymbol;
+        studyDiff.sprite = emptySymbol;
+        practiceDiff.sprite = emptySymbol;
+        hangoutDiff.sprite = emptySymbol;
     }
 }

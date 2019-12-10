@@ -74,8 +74,7 @@ public class DayProgression : MonoBehaviour
 
     public void IncrementDay()
     {
-        currentDayNumber++;
-        ResetHours();
+        currentDayNumber++;        
         OnDayIncrement();
         OnHourChange();
         if (currentDayNumber == dayOfMidterm)
@@ -108,5 +107,6 @@ public class DayProgression : MonoBehaviour
         {
             EndOfYear();
         }
+        ResetHours();
     }
 }

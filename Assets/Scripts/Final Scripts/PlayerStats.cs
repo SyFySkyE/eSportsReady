@@ -91,7 +91,7 @@ public class PlayerStats : MonoBehaviour
     private bool isCrunchTimeActive;
     private bool wasCrunchTimeActiveYesterday;
 
-    public event Action<string> OnStressChange;
+    public event Action<string> OnStressChange; 
     public event Action<int> OnEnergyChange;
     public event Action<string> OnLeagueRankChange;
     public event Action<float> onGpaProjectionChange;
@@ -234,7 +234,7 @@ public class PlayerStats : MonoBehaviour
         {
             OnGameLost("gpa");
         }
-        else if (leagueRankValue <= loseLeague) // TODO Why is this here??
+        else if (leagueRankValue <= loseLeague) // TODO Why is this in GPA evaluation??
         {
             OnGameLost("league");
         }
@@ -370,8 +370,9 @@ public class PlayerStats : MonoBehaviour
         //Start of new code
         if (currentPracticeValue >= practiceGateAmount)
         {
-            currentPracticeValue = practiceGateAmount;
             OnPracticeChange(currentPracticeValue, practiceGateAmount);
+            currentPracticeValue = practiceGateAmount;
+            
             OnMessagePush("You've done all the practice you can today");
         }
         //end of new code
@@ -422,8 +423,8 @@ public class PlayerStats : MonoBehaviour
         //start of new code
         if (currentStudyValue >= studyGateAmount)
         {
-            currentStudyValue = studyGateAmount;
             OnStudyChange(currentStudyValue, studyGateAmount);
+            currentStudyValue = studyGateAmount;            
             OnMessagePush("You've done all the studying you can do for today");
         }
         //end of new code

@@ -20,6 +20,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int studyGateAmount;
     [SerializeField] private int currentPracticeValue;
     [SerializeField] private int practiceGateAmount;
+    [SerializeField] private int hangoutGate = 1;
+    [SerializeField] private int hangoutValue = 1;
 
     [Header("Increment Amounts")]
     [SerializeField] private int leagueRankIncrementAmount = 25;
@@ -52,6 +54,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float startingGpaProjection = 2.5f;
     [SerializeField] private int startingStudyGateAmount = 2;
     [SerializeField] private int startingPracticeGateAmount = 2;
+    [SerializeField] private int startingHangoutValue = 1;
 
     [Header("Stress Thresholds")]
     [SerializeField] private int maxLevel1Stress = 19;
@@ -62,6 +65,7 @@ public class PlayerStats : MonoBehaviour
     [Tooltip("Gate amounts max out at these values, except during midterms and tourneys")]
     [SerializeField] private int maxStudyGate = 6;
     [SerializeField] private int maxPracticeGate = 6;
+    [SerializeField] private int maxHangoutGate = 1;
 
     [Header("League Rank Thresholds")]
     [SerializeField] private int maxBronze = 99;
@@ -97,6 +101,7 @@ public class PlayerStats : MonoBehaviour
     public event Action<bool> OnCrunchChange;
     public event Action<string> OnMessagePush;
     public event Action<string> OnGameLost;
+    public event Action<int, int> OnHangoutChange;
 
     public event Action OnGPALevelUp;
     public event Action OnLeagueRankUp;
@@ -212,8 +217,13 @@ public class PlayerStats : MonoBehaviour
         else
         {
             wasCrunchTimeActiveYesterday = false;
+        }        
+        if (!canHangWithFriends)
+        {
+            hangoutValue++;
+            OnHangoutChange(hangoutValue, hangoutGate);
+            canHangWithFriends = true;
         }
-        canHangWithFriends = true;
         DailyGPAEvaluation();
         DailyPracticeEvaluation();
     }
@@ -288,6 +298,8 @@ public class PlayerStats : MonoBehaviour
             //start of new code
             energyValue -= standardEnergyDecrement;
             //end of new code
+            hangoutValue--;
+            OnHangoutChange(hangoutValue, hangoutGate);
             StressChange();            
         }
         else

@@ -22,6 +22,7 @@ public class HUDObserver : MonoBehaviour
     [SerializeField] private TextMeshProUGUI crunchValue;
     [SerializeField] private TextMeshProUGUI messageText;
     [SerializeField] private TextMeshProUGUI lostMessageText;
+    [SerializeField] private TextMeshProUGUI hangoutGate;
 
     [Header("Canvas objects")]
     [SerializeField] private GameObject startCanvas;
@@ -50,6 +51,12 @@ public class HUDObserver : MonoBehaviour
         playerStats.OnCrunchChange += PlayerStats_OnCrunchChange;
         playerStats.OnMessagePush += PlayerStats_OnMessagePush;
         playerStats.OnGameLost += PlayerStats_OnGameLost;
+        playerStats.OnHangoutChange += PlayerStats_OnHangoutChange;
+    }
+
+    private void PlayerStats_OnHangoutChange(int arg1, int arg2)
+    {
+        hangoutGate.text = $"{arg1}/{arg2}";
     }
 
     private void DayProgression_EndOfYear()

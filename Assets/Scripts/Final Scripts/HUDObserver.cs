@@ -30,7 +30,8 @@ public class HUDObserver : MonoBehaviour
     [SerializeField] private GameObject gameCanvas;
     [SerializeField] private GameObject loseCanvas;
     [SerializeField] private GameObject winCanvas;
-    [SerializeField] private GameObject creditsCanvas; // added creditsCanvas
+    [SerializeField] private GameObject creditsCanvas;
+    [SerializeField] private GameObject showWorkCanvas; //added show work canvas
 
     [Header("Diff Image Objects accompanied by each stat")]
     [Tooltip("Logic for this is within HUDObserver")]
@@ -52,12 +53,13 @@ public class HUDObserver : MonoBehaviour
     private void OnEnable() // Should be onEnable if the event firing is in start, otherwise the event may fire before subscribers get a chance to subscribe. Firing events w/out subscribers causes a NullReferenceException. Can be avoided using null checks.
     {        
         ui.OnStartPress += Ui_OnStartPress;
-        //start of new code
         ui.OnCreditsPress += Ui_OnCreditsPress;
         ui.OnBTStartPress += Ui_OnBTStartPress;
         ui.OnEndGamePress += Ui_OnEndGamePress;
         ui.OnSleepPress += Ui_OnSleepPress;
         ui.OnChillPress += Ui_OnChillPress;
+        //start of new code
+        ui.OnShowWorkPress += Ui_OnShowWorkPress;
         //end of new code
         dayProgression.OnDayIncrement += DayProgression_OnDayIncrement;
         dayProgression.OnHourChange += DayProgression_OnHourDecrement;
@@ -164,11 +166,12 @@ public class HUDObserver : MonoBehaviour
         gameCanvas.SetActive(false);
         loseCanvas.SetActive(false);
         startCanvas.SetActive(false);
-        winCanvas.SetActive(true);
-        creditsCanvas.SetActive(false); // added credits canvas to be set to false 
+        winCanvas.SetActive(false);
+        creditsCanvas.SetActive(true);
+        showWorkCanvas.SetActive(false);
     }
 
-    //Start of new Code
+    
     private void Ui_OnCreditsPress()
     {
         gameCanvas.SetActive(false);
@@ -176,6 +179,7 @@ public class HUDObserver : MonoBehaviour
         startCanvas.SetActive(false);
         winCanvas.SetActive(false);
         creditsCanvas.SetActive(true);
+        showWorkCanvas.SetActive(false);
     }
 
     private void Ui_OnBTStartPress()
@@ -185,11 +189,23 @@ public class HUDObserver : MonoBehaviour
         startCanvas.SetActive(true);
         winCanvas.SetActive(false);
         creditsCanvas.SetActive(false);
+        showWorkCanvas.SetActive(false);
     }
 
     private void Ui_OnEndGamePress()
     {
         Application.Quit(0);
+    }
+
+    //Start of new Code
+    private void Ui_OnShowWorkPress()
+    {
+        gameCanvas.SetActive(false);
+        loseCanvas.SetActive(false);
+        startCanvas.SetActive(false);
+        winCanvas.SetActive(false);
+        creditsCanvas.SetActive(false);
+        showWorkCanvas.SetActive(true);
     }
 
     //End of new code
@@ -199,12 +215,19 @@ public class HUDObserver : MonoBehaviour
         gameCanvas.SetActive(true);
         loseCanvas.SetActive(false);
         startCanvas.SetActive(false);
+        winCanvas.SetActive(false);
+        creditsCanvas.SetActive(false);
+        showWorkCanvas.SetActive(false);
     }
 
     private void PlayerStats_OnGameLost(string obj)
     {
         gameCanvas.SetActive(false);
         loseCanvas.SetActive(true);
+        startCanvas.SetActive(false);
+        winCanvas.SetActive(false);
+        creditsCanvas.SetActive(false);
+        showWorkCanvas.SetActive(false);
         if (obj == "gpa")
         {
             lostMessageText.text = "You've flunked out!";
@@ -224,9 +247,11 @@ public class HUDObserver : MonoBehaviour
     {
         messageText.text = "";
         gameCanvas.SetActive(false);
-        startCanvas.SetActive(true);
         loseCanvas.SetActive(false);
+        startCanvas.SetActive(true);
         winCanvas.SetActive(false);
+        creditsCanvas.SetActive(false);
+        showWorkCanvas.SetActive(false);
         ResetDiffImages();
     }
 

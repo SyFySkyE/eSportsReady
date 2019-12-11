@@ -9,7 +9,7 @@ public class CanvasManager : MonoBehaviour
     [SerializeField] GameObject startCanvas;
     [SerializeField] GameObject gameCanvas;
     [SerializeField] GameObject winCanvas;
-    [SerializeField] GameObject loseCanvas;    
+    [SerializeField] GameObject loseCanvas;
 
     [Header("TMP Pool Text Objects")]
     [SerializeField] TextMeshProUGUI startText;    

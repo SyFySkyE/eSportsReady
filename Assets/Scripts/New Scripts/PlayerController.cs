@@ -42,27 +42,27 @@ public class PlayerController : MonoBehaviour
     private PlayerState previousState;
     public PlayerState CurrentState
     {
-        get { return this.currentState; }
+        get { return currentState; }
         set
         {
-            if (this.currentState != value)
+            if (currentState != value)
             {
-                this.PreviousState = this.currentState;
-                this.currentState = value;
-                Debug.Log($"{this.name}'s state changed from: {this.PreviousState} to: {this.currentState}");
-                this.PreviousState = this.CurrentState;
+                PreviousState = currentState;
+                currentState = value;
+                Debug.Log($"{name}'s state changed from: {PreviousState} to: {currentState}");
+                PreviousState = CurrentState;
             }
         }
     }
     public PlayerState PreviousState
     {
-        get { return this.previousState; }
+        get { return previousState; }
         set
         {
-            if (this.previousState != value)
+            if (previousState != value)
             {
-                Debug.Log($"{this.name}'s previous state was {this.PreviousState} and is now {value}");
-                this.previousState = value;                
+                Debug.Log($"{name}'s previous state was {PreviousState} and is now {value}");
+                previousState = value;                
             }
         }
     }
@@ -70,8 +70,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        this.CurrentState = PlayerState.Starting;
-        this.previousState = PlayerState.Starting;
+        CurrentState = PlayerState.Starting;
+        previousState = PlayerState.Starting;
         
     }
 }

@@ -17,12 +17,13 @@ public class ButtonBehaviors : MonoBehaviour
 
     [SerializeField] private Button startButton;
     [SerializeField] private Button resetButton;
-    //start of new code
     [SerializeField] private Button backtoStartButton;
     [SerializeField] private Button creditsButton;
     [SerializeField] private Button endButton;
     [SerializeField] private Button closeTutButton;
-    //End of new code
+    //start of new code
+    [SerializeField] private Button showWorkButton;
+    //end of new code
 
     private AudioSource audioSource;
 
@@ -34,11 +35,12 @@ public class ButtonBehaviors : MonoBehaviour
     public event Action OnCrunchPress;
     public event Action OnStartPress;
     public event Action OnResetPress;
-    //Start of new code
     public event Action OnCreditsPress;
     public event Action OnBTStartPress;
     public event Action OnEndGamePress;
     public event Action OnTutTextClose;
+    //start of new code
+    public event Action OnShowWorkPress;
     // Click Events
 
     private void Start()
@@ -93,8 +95,7 @@ public class ButtonBehaviors : MonoBehaviour
         OnResetPress();
         audioSource.Play();
     }
-
-    //Start of new code
+    
     public void CreditsButton()
     {
         OnCreditsPress();
@@ -107,6 +108,13 @@ public class ButtonBehaviors : MonoBehaviour
         audioSource.Play();
     }
 
+    //start of new code
+    public void ShowWorkButton()
+    {
+        OnShowWorkPress();
+    }
+    //end of new code
+
     public void EndGameButton()
     {
         OnEndGamePress();
@@ -118,5 +126,4 @@ public class ButtonBehaviors : MonoBehaviour
         OnTutTextClose();
         audioSource.Play();
     }
-    //End of new code
 }

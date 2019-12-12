@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class TutorialProgress : MonoBehaviour // TODO The tutorial in this script is extremely hacked together. High tech debt! Fix it!
@@ -35,9 +36,11 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
 
     private int tutorialSection = 0;
 
-    //[Header("Sprites to use")]
-
-    
+    [Header("Sprites to use")]
+    [SerializeField] private Sprite advisorSprite;
+    [SerializeField] private Sprite coachSprite;
+    [SerializeField] private Sprite friendSprite;
+    [SerializeField] private Image spriteDisplay;
 
     private void Awake()
     {
@@ -62,17 +65,20 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
 
     private void Buttons_OnTutTextClose() // Advisor script starts in start method at bottom. TODO This is very bad. Remind Chris to fix it.
     {
+        spriteDisplay.sprite = advisorSprite;
         textContainer.SetActive(false);
         if (tutorialSection == 0)
         {
             textContainer.SetActive(true);
             tutorialText.text = coachIntro;
+            spriteDisplay.sprite = coachSprite;
             tutorialSection++;
         }
         else if (tutorialSection == 1)
         {
             textContainer.SetActive(true);
             tutorialText.text = friendIntro;
+            spriteDisplay.sprite = friendSprite;
             tutorialSection++;
         }
     }
@@ -80,12 +86,14 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
     private void Player_OnLeagueRankUp()
     {
         textContainer.SetActive(true);
+        spriteDisplay.sprite = coachSprite;
         tutorialText.text = onLeagueRankUp; 
     }
 
     private void Day_TourneyTime()
     {
         textContainer.SetActive(true);
+        spriteDisplay.sprite = coachSprite;
         tutorialText.text = tournamentTimeText;
     }
 
@@ -93,11 +101,13 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
     {
         textContainer.SetActive(true);
         tutorialText.text = finalsText;
+        spriteDisplay.sprite = advisorSprite;
     }
 
     private void Day_MidtermTime()
     {
         textContainer.SetActive(true);
+        spriteDisplay.sprite = advisorSprite;
         tutorialText.text = midtermText;
     }
 
@@ -105,30 +115,35 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
     {
         textContainer.SetActive(true);
         tutorialText.text = onSuperStressedOut;
+        spriteDisplay.sprite = friendSprite;
     }
 
     private void Player_OnStresedOut()
     {
         textContainer.SetActive(true);
         tutorialText.text = onStressedOut;
+        spriteDisplay.sprite = friendSprite;
     }
 
     private void Player_OnLeagueLower()
     {
         textContainer.SetActive(true);
         tutorialText.text = onLeagueRankLower;
+        spriteDisplay.sprite = coachSprite;
     }
 
     private void Player_OnGPALower()
     {
         textContainer.SetActive(true);
         tutorialText.text = onGpaLower;
+        spriteDisplay.sprite = advisorSprite;
     }
 
     private void Player_OnGPALevelUp()
     {
         textContainer.SetActive(true);
         tutorialText.text = onGpaLevelUp;
+        spriteDisplay.sprite = advisorSprite;
     }
 
     private void Start()

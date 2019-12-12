@@ -166,8 +166,8 @@ public class HUDObserver : MonoBehaviour
         gameCanvas.SetActive(false);
         loseCanvas.SetActive(false);
         startCanvas.SetActive(false);
-        winCanvas.SetActive(false);
-        creditsCanvas.SetActive(true);
+        winCanvas.SetActive(true);
+        creditsCanvas.SetActive(false);
         showWorkCanvas.SetActive(false);
     }
 

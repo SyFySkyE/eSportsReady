@@ -86,6 +86,14 @@ public class PlayerStats : MonoBehaviour
     [Header("Depends on Day Progression Object")]
     [SerializeField] private DayProgression dayProgression;
 
+    [Header("Rank Display Icons")] // TODO This should be in HUDObserver
+    [SerializeField] private Sprite bronzeRank;
+    [SerializeField] private Sprite silverRank;
+    [SerializeField] private Sprite goldRank;
+    [SerializeField] private Sprite platRank;
+    [SerializeField] private Sprite mastersRank;
+    [SerializeField] private UnityEngine.UI.Image rankDisplay;
+
     private bool canHangWithFriends;
     private bool canChill;
     private bool isCrunchTimeActive;
@@ -543,29 +551,36 @@ public class PlayerStats : MonoBehaviour
         if (leagueRankValue > 0 && leagueRankValue < maxBronze)
         {
             currentLeagueRank = LeagueRankLevels.Bronze;
+            rankDisplay.sprite = bronzeRank;
         }
         else if (leagueRankValue > maxBronze && leagueRankValue < maxSilver)
         {
             currentLeagueRank = LeagueRankLevels.Silver;
+            rankDisplay.sprite = silverRank;
         }
         if (leagueRankValue > maxSilver && leagueRankValue < maxGold)
         {
             currentLeagueRank = LeagueRankLevels.Gold;
+            rankDisplay.sprite = goldRank;
         }
         if (leagueRankValue > maxGold && leagueRankValue < maxPlat)
         {
             currentLeagueRank = LeagueRankLevels.Platinum;
+            rankDisplay.sprite = platRank;
         }
         if (leagueRankValue > maxPlat && leagueRankValue < maxDiamond)
         {
             currentLeagueRank = LeagueRankLevels.Diamond;
+            rankDisplay.sprite = mastersRank;
         }
         if (leagueRankValue > maxDiamond && leagueRankValue < maxMaster)
         {
             currentLeagueRank = LeagueRankLevels.Master;
+            rankDisplay.sprite = mastersRank;
         }
         if (leagueRankValue > maxMaster)
         {
+            rankDisplay.sprite = mastersRank;
             currentLeagueRank = LeagueRankLevels.GrandMaster;
         }
     }

@@ -6,6 +6,8 @@ using TMPro;
 
 public class TutorialProgress : MonoBehaviour // TODO The tutorial in this script is extremely hacked together. High tech debt! Fix it!
 {
+    private bool onceAlready;
+
     [Header("Subscribing to events from these objects")]
     [SerializeField] private PlayerStats player;
     [SerializeField] private DayProgression day;
@@ -22,7 +24,7 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
     [SerializeField] private string tournamentTimeText = "The tournament is here. Practice up! We need you!";
     [SerializeField] private string midtermText = "Midterms are here. Make sure to Study!";
     [SerializeField] private string finalsText = "Finals are here. Study up before the year is over!";
-    [SerializeField] private string onStressedOut = "You're not gonna work as good stressed out like that. Come chill with us!";
+    [SerializeField] private string onStressedOut = "You're not gonna work as well stressed out like that. Come chill with us!";
     [SerializeField] private string onSuperStressedOut = "You're way too stressed! Take a day off and chill already!";
     [SerializeField] private string onLeagueRankLower = "Make sure to Practice more! It's showing in scrims.";
     [SerializeField] private string onGpaLower = "One of your teacher says you aren't doing so well. Study more!";
@@ -60,6 +62,8 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
 
     private void Day_OnDayIncrement()
     {
+        onceAlready = false;
+
         //tutorialSection = 10; // TODO Such as haaack. Disabling tutorial if player skips through itr.
     }
 
@@ -120,9 +124,14 @@ public class TutorialProgress : MonoBehaviour // TODO The tutorial in this scrip
 
     private void Player_OnStresedOut()
     {
-        textContainer.SetActive(true);
-        tutorialText.text = onStressedOut;
-        spriteDisplay.sprite = friendSprite;
+        if (onceAlready == false)
+        {
+            textContainer.SetActive(true);
+            tutorialText.text = onStressedOut;
+            spriteDisplay.sprite = friendSprite;
+            onceAlready = true;
+        }
+     
     }
 
     private void Player_OnLeagueLower()

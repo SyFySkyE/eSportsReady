@@ -66,6 +66,7 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private int maxStudyGate = 6;
     [SerializeField] private int maxPracticeGate = 6;
     [SerializeField] private int maxHangoutGate = 1;
+    [SerializeField] private float maxGPA = 4.0f;
 
     [Header("League Rank Thresholds")]
     [SerializeField] private int maxBronze = 99;
@@ -249,6 +250,10 @@ public class PlayerStats : MonoBehaviour
         if (currentStudyValue >= studyGateAmount)
         {
             gpaProjection += gpaProjectionIncrementAmount;
+            if (gpaProjection >= maxGPA)
+            {
+                gpaProjection = maxGPA;
+            }
             if (studyGateAmount < maxStudyGate)
             {
                 studyGateAmount++;

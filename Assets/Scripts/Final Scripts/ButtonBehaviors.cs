@@ -126,4 +126,9 @@ public class ButtonBehaviors : MonoBehaviour
         OnTutTextClose();
         audioSource.Play();
     }
+
+    public void QuitGame()
+    {
+        Application.Quit(0);
+    }
 }
